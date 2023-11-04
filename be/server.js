@@ -1,11 +1,16 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const accountRoute = require('./routes/accounts')
 require('dotenv').config()
 
 
 const PORT = 5060;
 
 const app = express();
+
+app.use(express.json())
+
+app.use('/', accountRoute)
 
 
 

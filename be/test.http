@@ -1,0 +1,45 @@
+####################### ACCOUNT
+#POST ACCOUNT
+POST http://localhost:5060/account/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "firstName": "Max",
+  "lastName": "asd",
+  "email": "morici@gmail.com",
+  "birthday": "23/08/1992",
+  "password": "lamiapassword"
+}
+
+####
+#GET ALL ACCOUNT
+GET http://localhost:5060/accounts
+
+####
+#GET ALL ACCOUNT ADMIN
+GET http://localhost:5060/adminAccounts
+
+####
+#GET ALL ACCOUNT USER
+GET http://localhost:5060/userAccounts
+
+####
+#GET ACCOUNT BY ID
+GET http://localhost:5060/account/654683ab30e3a3822b50c9aa
+
+####
+#PATCH ACCOUNT
+PATCH http://localhost:5060/account/update/6546849faed7cb509be01df7 HTTP/1.1
+Content-Type: application/json
+
+{
+  "firstName": "Deborah",
+  "lastName": "Di Gennaro",
+  "email": "debby@gmail.com",
+  "birthday": "08/08/1994",
+  "role": "user"
+}
+
+####
+#DELETE ACCOUNT
+DELETE http://localhost:5060/account/delete/654689e44aef9f82eef8b165
