@@ -1,4 +1,4 @@
-####################### ACCOUNT
+####################################################### ACCOUNT
 #POST ACCOUNT
 POST http://localhost:5060/account/create HTTP/1.1
 Content-Type: application/json
@@ -43,3 +43,31 @@ Content-Type: application/json
 ####
 #DELETE ACCOUNT
 DELETE http://localhost:5060/account/delete/654689e44aef9f82eef8b165
+
+####################################################### GAME
+#POST GAME
+POST http://localhost:5060/game/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Dragonball FighterZ",
+  "category": "Picchiaduro",
+  "description": "Diventa un super Sayan!",
+  "platform": "PlayStation/Xbox/Switch",
+  "editor": "Bandai",
+  "rate": 10,
+  "price": 60
+}
+
+####
+#GET ALL GAMES
+GET http://localhost:5060/games
+
+####
+#GET GAME BY ID
+GET http://localhost:5060/game/6548f87f8c21e22333981daf
+
+####
+#GET ALL GAMES
+GET http://localhost:5060/games/Adventure
+

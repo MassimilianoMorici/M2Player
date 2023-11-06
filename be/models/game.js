@@ -11,7 +11,7 @@ const GameSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ["MMORPG", "RPG", "FPS", "Race"],
+        enum: ["MMORPG", "RPG", "FPS", "Race", "Adventure", "Picchiaduro"],
         required: true
     },
     description: {
@@ -24,8 +24,7 @@ const GameSchema = new mongoose.Schema({
     },
     editor: {
         type: String,
-        enum: ["user", "admin"],
-        default: "user"
+        required: true
     },
     rate: {
         type: Number,
