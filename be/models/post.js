@@ -24,8 +24,17 @@ const PostSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ["user", "admin"],
-        default: "user"
+        enum: [
+            "Easter Egg",
+            "Gameplay",
+            "Guide",
+            "Nuove uscite",
+            "Party",
+            "Preordini",
+            "Segreti",
+            "Tutorial"
+        ],
+        required: true
     },
 
 }, { timestamps: true, strict: true })
