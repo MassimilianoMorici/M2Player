@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const accountRoute = require('./routes/accounts')
 const gameRoute = require('./routes/games')
 const postRoute = require('./routes/posts')
+const commentRoute = require('./routes/comments')
 require('dotenv').config()
 
 
@@ -15,7 +16,7 @@ app.use(express.json())
 app.use('/', accountRoute)
 app.use('/', gameRoute)
 app.use('/', postRoute)
-
+app.use('/', commentRoute)
 
 
 
