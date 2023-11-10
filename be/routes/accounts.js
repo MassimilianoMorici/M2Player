@@ -1,23 +1,28 @@
 const express = require('express')
 const AccountModel = require('../models/account')
 const accounts = express.Router()
+const bcrypt = require('bcrypt')
 
 require('dotenv').config()
 
 
 // POST
 accounts.post('/account/create', async (req, res) => {
-
-    const { firstName, lastName, email, birthday, password, avatar, role } = req.body;
+    const salt = await bcrypt.genSalt(10)
+    //livello di crittograzia, 10 è già inviolabile
+    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+    //accetta due parametri
+    //1 cosa deve criptare
+    //2 con che algoritmo deve criptarlo(ma noi l'abbiamo definito nel nostro salt)
 
     const newAccount = new AccountModel({
-        firstName,
-        lastName,
-        email,
-        birthday,
-        password,
-        avatar,
-        role,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        birthday: req.body.birthday,
+        password: hashedPassword,
+        avatar: req.body.avatar,
+        role: req.body.role
     })
 
     try {
