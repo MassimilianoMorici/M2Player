@@ -4,19 +4,24 @@ const accountRoute = require('./routes/accounts')
 const gameRoute = require('./routes/games')
 const postRoute = require('./routes/posts')
 const commentRoute = require('./routes/comments')
+const loginRoute = require('./routes/login')
+
+const cors = require('cors')
 require('dotenv').config()
 
 
-const PORT = 5060;
+const PORT = 5050;
 
 const app = express();
 
 app.use(express.json())
+app.use(cors())
 
 app.use('/', accountRoute)
 app.use('/', gameRoute)
 app.use('/', postRoute)
 app.use('/', commentRoute)
+app.use('/', loginRoute)
 
 
 
