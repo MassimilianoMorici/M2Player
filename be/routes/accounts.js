@@ -6,6 +6,22 @@ const bcrypt = require('bcrypt')
 require('dotenv').config()
 
 
+const cloudUpload = require('../middleware/cloudinaryAccount')
+
+
+//post con Cloudinary
+accounts.post('/account/cloudUpload', cloudUpload.single('avatar'), async (req, res) => {
+    try {
+        res.status(200).json({ avatar: req.file.path })
+    } catch (e) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Errore Interno del server"
+        })
+    }
+})
+
+
 // POST
 accounts.post('/account/create', async (req, res) => {
     const salt = await bcrypt.genSalt(10)
