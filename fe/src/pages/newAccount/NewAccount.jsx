@@ -85,6 +85,7 @@ const NewAccount = () => {
                 <h1 className="mb-4">Registrati</h1>
                 <Form encType="multipart/form-data" onSubmit={onSubmit} >
 
+
                     <Form.Group controlId="nome-form" className="mt-3">
                         <Form.Label>Nome</Form.Label>
                         <Form.Control
@@ -95,6 +96,7 @@ const NewAccount = () => {
                             placeholder="Nome"
                         />
                     </Form.Group>
+
 
                     <Form.Group controlId="cognome-form" className="mt-3">
                         <Form.Label>Cognome</Form.Label>
@@ -107,6 +109,7 @@ const NewAccount = () => {
                         />
                     </Form.Group>
 
+
                     <Form.Group controlId="email-form" className="mt-3">
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -116,9 +119,9 @@ const NewAccount = () => {
                             onChange={handleInputChange}
                             placeholder="Email"
                         >
-
                         </Form.Control>
                     </Form.Group>
+
 
                     <Form.Group controlId="password-form" className="mt-3">
                         <Form.Label>Password</Form.Label>
@@ -131,6 +134,7 @@ const NewAccount = () => {
                         />
                     </Form.Group>
 
+
                     <Form.Group controlId="dataDiNascita-form" className="mt-3">
                         <Form.Label>Data di nascita</Form.Label>
                         <Form.Control
@@ -138,9 +142,10 @@ const NewAccount = () => {
                             name="birthday"
                             value={formData.birthday}
                             onChange={handleInputChange}
-                            placeholder="DD / MM / YY"
+                            type="date"
                         />
                     </Form.Group>
+
 
                     <Form.Group controlId="avatar-form" className="mt-3">
                         <Form.Label>Avatar</Form.Label>

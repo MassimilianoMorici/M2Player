@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import MainLayout from "../../layouts/MainLayout";
 import "./login.css";
 
 
@@ -50,8 +51,7 @@ const Login = () => {
 
 
     return (
-        <>
-
+        <MainLayout>
             <Container className="new-blog-container login" >
                 <Form onSubmit={onSubmit}>
                     <Form.Group controlId="author-form" className="mt-3">
@@ -88,12 +88,14 @@ const Login = () => {
                         >
                             Login
                         </Button>
-
+                        <Link to="/newAccount" className="text-white justify-content-center">
+                            Non sei ancora registato? Registrati
+                        </Link>
                     </Form.Group>
 
                 </Form >
             </Container >
-        </>
+        </MainLayout>
     )
 }
 

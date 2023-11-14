@@ -14,7 +14,7 @@ const AccountSchema = new mongoose.Schema({
         required: true,
     },
     birthday: {
-        type: String,
+        type: Date,
         required: true,
     },
     password: {
