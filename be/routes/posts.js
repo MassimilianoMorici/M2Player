@@ -1,8 +1,23 @@
 const express = require('express')
 const PostModel = require('../models/post')
 const posts = express.Router()
+const cloudUpload = require('../middleware/cloudinaryPost')
 
 require('dotenv').config()
+
+
+//post con Cloudinary
+posts.post('/posts/cloudUpload', cloudUpload.single('img'), async (req, res) => {
+    try {
+        res.status(200).json({ img: req.file.path })
+    } catch (e) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Errore Interno del server"
+        })
+    }
+})
+
 
 // POST
 posts.post('/post/create', async (req, res) => {

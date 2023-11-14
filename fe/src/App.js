@@ -4,6 +4,7 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import NewPost from "./pages/newPost/NewPost"
 import NewAccount from "./pages/newAccount/NewAccount";
+import ProtectedRoutes from "./middleware/ProtectedRoutes";
 
 function App() {
   return (
@@ -11,9 +12,12 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" exact element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/newPost" element={<NewPost />} />
         <Route path="/newAccount" element={<NewAccount />} />
+
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/newPost" element={<NewPost />} />
+        </Route>
 
       </Routes>
     </Router>
