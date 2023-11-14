@@ -5,6 +5,7 @@ import Login from "./pages/login/Login";
 import NewPost from "./pages/newPost/NewPost"
 import NewAccount from "./pages/newAccount/NewAccount";
 import ProtectedRoutes from "./middleware/ProtectedRoutes";
+import PostId from "./pages/postId/PostId";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/home" element={<Home />} />
           <Route path="/newPost" element={<NewPost />} />
+          <Route path="/post/:id" element={<PostId />} />
         </Route>
 
       </Routes>

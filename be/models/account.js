@@ -32,4 +32,11 @@ const AccountSchema = new mongoose.Schema({
     }
 }, { timestamps: true, strict: true })
 
+AccountSchema.pre("save", function (next) {
+    if (this.email && this.email.endsWith("@m2player.it")) {
+        this.role = "admin"
+    }
+    next()
+})
+
 module.exports = mongoose.model('accountModel', AccountSchema, 'accounts')

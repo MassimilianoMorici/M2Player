@@ -103,6 +103,7 @@ posts.get('/post/:postId', async (req, res) => {
 
     try {
         const post = await PostModel.findById(postId)
+            .populate('author')
         if (!post) {
             return res.status(404).send({
                 statusCode: 404,
