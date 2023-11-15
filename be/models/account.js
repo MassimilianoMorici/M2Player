@@ -32,6 +32,8 @@ const AccountSchema = new mongoose.Schema({
     }
 }, { timestamps: true, strict: true })
 
+//Logica per registrare in admin chiunque abbia un email aziendale, attenzione, 
+//tale logica va implementata con una logica di attivazione account via email, non è questo il caso dato che è un progetto simulazione
 AccountSchema.pre("save", function (next) {
     if (this.email && this.email.endsWith("@m2player.it")) {
         this.role = "admin"

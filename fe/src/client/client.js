@@ -25,6 +25,11 @@ class AxiosClient {
         return response.data
     }
 
+    async patch(url, body, config) {
+        const response = await this.axiosInstance.patch(url, body, config)
+        return response.data
+    }
+
 
     async delete(url, config) {
         const response = await this.axiosInstance.delete(url, config)
