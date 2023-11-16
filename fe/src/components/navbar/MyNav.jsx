@@ -77,7 +77,7 @@ const MyNav = () => {
         navigate('/')
     }
 
-
+    // console.log(session.role);
 
     return (
         <Navbar expand="lg" className="blog-navbar" fixed="top">
@@ -118,6 +118,10 @@ const MyNav = () => {
                             <Dropdown.Menu>
                                 <NavDropdown.Item className="selection" href="/home">Home</NavDropdown.Item>
                                 <NavDropdown.Item className="selection" href="/me">Account</NavDropdown.Item>
+
+                                <NavDropdown.Item className="selection" href="/newPost">Nuovo Post</NavDropdown.Item>
+                                {session.role === "admin" &&
+                                    <NavDropdown.Item className="selection" href="/newGame">Nuovo Game</NavDropdown.Item>}
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={handleLogout} className="selection" >Logout</NavDropdown.Item>
                             </Dropdown.Menu>

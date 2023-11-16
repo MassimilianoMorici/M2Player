@@ -1,23 +1,37 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import { Col, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import DOMPurify from 'dompurify';
 import "./postItem.css";
 
-const PostItem = ({ title, game, category, img, authorNome, authorCognome, authorAvatar, content, _id }) => {
+const PostItem = ({ title, game, category, img, authorNome, authorCognome, authorAvatar, _id }) => {
+
+
+
     return (
         <Card className="blog-card my-5 ">
             <Link to={`/post/${_id}`} className="blog-link">
                 <Card.Img variant="top" src={img} className="blog-cover" />
                 <Card.Body>
-                    <Card.Title>{title}</Card.Title>
-                    <Row>
-                        <Col>
-                            <p>{game}</p>
-                            <p>{category}</p>
-                            <div className="ellissi-3-righe">{content}</div>
-                        </Col>
-                    </Row>
+                    <Container>
+                        <div className="d-flex flex-column">
+                            <h4 className="ellissi-1-righe d-flex justify-content-center">{title}</h4>
+                            <hr />
+                            <div className="d-flex justify-content-between mt-2">
+                                <div className="d-flex flex-column h_body_2">
+                                    <h6>Game</h6>
+                                    <p>{game}</p>
+                                </div>
+                                <div className="d-flex flex-column h_body_2">
+                                    <h6>Categoria</h6>
+                                    <p>{category}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </Container>
+
                 </Card.Body>
             </Link>
             <Card.Footer>
@@ -32,7 +46,7 @@ const PostItem = ({ title, game, category, img, authorNome, authorCognome, autho
                     </Col>
                 </Row>
             </Card.Footer>
-        </Card>
+        </Card >
     )
 }
 

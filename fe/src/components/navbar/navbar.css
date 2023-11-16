@@ -41,13 +41,13 @@
 }
 
 .selection:hover {
-    color: #ffffff;
-    background: rgb(247, 31, 82);
-    background: linear-gradient(87deg, #5A0B87 0%, #CB2376 100%);
+    color: #ffffff !important;
+    background: rgb(1, 85, 213);
+    background: linear-gradient(87deg, rgba(1, 85, 213, 1) 0%, rgba(76, 153, 91, 1) 100%);
 }
 
 .selection:active {
-    color: #ffffff;
-    background: rgb(247, 31, 82);
-    background: linear-gradient(87deg, #590b8770 0%, #cb237772 100%);
+    color: #ffffff !important;
+    background: rgb(1, 85, 213);
+    background: linear-gradient(87deg, rgba(1, 85, 213, 1) 0%, rgba(76, 153, 91, 1) 100%);
 }

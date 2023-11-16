@@ -5,13 +5,15 @@ import AxiosClient from "../../../client/client";
 import "./postList.css";
 import PostItem from "../postItem/PostItem";
 import useSession from "../../../hooks/useSession";
+import { Container } from "react-bootstrap";
+
 const client = new AxiosClient()
 
 const PostList = () => {
 
 
     const session = useSession()
-    console.log(session);
+    // console.log(session);
 
     const [currentPage, setCurrentPage] = useState(1)
     const [posts, setPosts] = useState([])
@@ -27,8 +29,11 @@ const PostList = () => {
         }
     };
 
-    console.log(posts);
+    // for (let i = 0; i < posts.posts.length; i++) {
+    //     console.log(posts.posts[i].content);
+    // }
 
+    // const sanitizedHTML = DOMPurify.sanitize(posts.post?.content);
 
     const handlePagination = (value) => {
         setCurrentPage(value)
@@ -41,16 +46,22 @@ const PostList = () => {
 
 
 
+
+
     return (
 
-        <div>
-            <div className="d-flex flex-wrap justify-content-evenly my-5">
+
+        <Container className="mod my-custom-container">
+            <h1 className="d-flex justify-content-center">POST</h1>
+            <div className="d-flex flex-wrap justify-content-evenly">
                 {posts && posts.posts?.map((post) => {
-                    console.log(post);
+                    // console.log(post);
+
                     return (
                         <PostItem key={post._id}
                             _id={post._id}
                             title={post.title}
+                            game={post.game}
                             category={post.category}
                             img={post.img}
                             authorNome={post.author?.firstName}
@@ -61,14 +72,15 @@ const PostList = () => {
                     )
                 })}
             </div>
-            <div>
+            <div className="mb-5">
                 <ResponsivePagination
                     current={currentPage}
                     total={posts && posts.totalPages}
                     onPageChange={handlePagination}
                 />
             </div>
-        </div>
+        </Container>
+
     );
 };
 
