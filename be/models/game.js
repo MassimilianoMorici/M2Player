@@ -14,7 +14,7 @@ const GameSchema = new mongoose.Schema({
         enum: ["MMORPG", "RPG", "FPS", "Race", "Adventure", "Picchiaduro"],
         required: true
     },
-    description: {
+    content: {
         type: String,
         required: true,
     },
@@ -32,10 +32,7 @@ const GameSchema = new mongoose.Schema({
         min: 1,
         required: true
     },
-    price: {
-        type: Number,
-        required: true
-    }
+
 
 }, { timestamps: true, strict: true })
 

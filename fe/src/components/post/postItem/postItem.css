@@ -21,16 +21,29 @@
     width: 50px !important;
     height: 50px !important;
     object-fit: cover !important;
-
 }
 
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-
-.ellissi-1-righe {
+.ellipsis1 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    /* Numero di righe da visualizzare */
+    /* Altre proprietà per il layout */
+    max-height: 3em;
+    /* Altezza massima di due righe di testo */
+    line-height: 1.5;
+    /* Altezza della riga */
+}
+
+.h_body_1 {
     height: 60px;
 }
 

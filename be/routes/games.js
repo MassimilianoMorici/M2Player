@@ -1,23 +1,36 @@
 const express = require('express')
 const GameModel = require('../models/game')
 const games = express.Router()
+const cloudUpload = require('../middleware/cloudinaryGame')
 
 require('dotenv').config()
+
+//post con Cloudinary
+games.post('/games/cloudUpload', cloudUpload.single('cover'), async (req, res) => {
+    try {
+        res.status(200).json({ cover: req.file.path })
+    } catch (e) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Errore Interno del server"
+        })
+    }
+})
+
 
 // POST
 games.post('/game/create', async (req, res) => {
 
-    const { title, cover, category, description, platform, editor, rate, price } = req.body;
+    const { title, cover, category, content, platform, editor, rate, } = req.body;
 
     const newGame = new GameModel({
         title,
         cover,
         category,
-        description,
+        content,
         platform,
         editor,
-        rate,
-        price
+        rate
     })
 
     try {
@@ -37,14 +50,41 @@ games.post('/game/create', async (req, res) => {
 })
 
 // GET
+// games.get('/games', async (req, res) => {
+//     try {
+//         const games = await GameModel.find()
+
+//         res.status(200).send({
+//             statusCode: 200,
+//             games
+//         })
+//     } catch (e) {
+//         res.status(500).send({
+//             statusCode: 500,
+//             message: "Internal server error"
+//         })
+//     }
+// })
+
 games.get('/games', async (req, res) => {
+
+    const { page = 1, pageSize = 4 } = req.query
+
     try {
         const games = await GameModel.find()
+            .limit(pageSize)
+            .skip((page - 1) * pageSize)
+
+        const totalGame = await GameModel.count()
 
         res.status(200).send({
             statusCode: 200,
+            currentPage: Number(page),
+            totalPages: Math.ceil(totalGame / pageSize),
+            totalGame,
             games
         })
+
     } catch (e) {
         res.status(500).send({
             statusCode: 500,

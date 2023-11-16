@@ -2,7 +2,6 @@ import React from "react";
 import { Card, Container } from "react-bootstrap";
 import { Col, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import DOMPurify from 'dompurify';
 import "./postItem.css";
 
 const PostItem = ({ title, game, category, img, authorNome, authorCognome, authorAvatar, _id }) => {
@@ -16,7 +15,9 @@ const PostItem = ({ title, game, category, img, authorNome, authorCognome, autho
                 <Card.Body>
                     <Container>
                         <div className="d-flex flex-column">
-                            <h4 className="ellissi-1-righe d-flex justify-content-center">{title}</h4>
+                            <div className="h_body_1">
+                                <h4 className="ellipsis1 d-flex justify-content-center">{title}</h4>
+                            </div>
                             <hr />
                             <div className="d-flex justify-content-between mt-2">
                                 <div className="d-flex flex-column h_body_2">
@@ -40,7 +41,7 @@ const PostItem = ({ title, game, category, img, authorNome, authorCognome, autho
                         xs={2}>
                         <Image className="blog-author" src={authorAvatar} roundedCircle />
                     </Col>
-                    <Col>
+                    <Col className="ms-3">
                         <div>by</div>
                         <h6>{`${authorNome} ${authorCognome}`}</h6>
                     </Col>

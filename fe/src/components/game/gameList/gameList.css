@@ -1,60 +1,95 @@
-.asd {
-    margin-top: 500px;
+.mod {
+    margin-top: 250px;
 }
 
+
+.my-custom-container {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+@media (min-width: 1537px) and (max-width: 2096px) {
+    .my-custom-container {
+        padding-left: 200px !important;
+        padding-right: 200px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@media (min-width: 2097px) and (max-width: 2260px) {
+    .my-custom-container {
+        padding-left: 300px !important;
+        padding-right: 300px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@media (min-width: 2261px) {
+    .my-custom-container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
+
+
+
 .pagination {
-    justify-content: center;
-    display: flex;
-    padding-left: 0;
-    list-style: none;
-    margin: 0;
+    justify-content: center !important;
+    display: flex !important;
+    padding-left: 0 !important;
+    list-style: none !important;
+    margin: 0 !important;
 
 }
 
 .page-item .page-link {
-    position: relative;
-    display: block;
-    margin: 0 2px;
-    min-height: 40px;
-    min-width: 40px;
-    border-radius: 50px;
-    text-align: center;
-    line-height: 25px;
-    color: #000000;
-    text-decoration: none;
-
+    position: relative !important;
+    display: block !important;
+    margin: 0 2px !important;
+    min-height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 50px !important;
+    text-align: center !important;
+    line-height: 25px !important;
+    color: black;
+    text-decoration: none !important;
 }
 
 .page-item:last-child .page-link {
-    border-radius: 50%;
+    border-radius: 50% !important;
 }
 
 .page-item:first-child .page-link {
-    border-radius: 50%;
+    border-radius: 50% !important;
 }
 
 .page-item {
-    min-height: 10px;
-    min-width: 10px;
+    min-height: 10px !important;
+    min-width: 10px !important;
 }
 
 .page-item a.page-link:hover {
-    background: rgb(247, 31, 82);
-    background: linear-gradient(87deg, #590b8770 0%, #cb237772 100%);
+    background: rgba(1, 86, 213, 0.464) !important;
+    background: linear-gradient(87deg, rgba(1, 86, 213, 0.458) 0%, rgba(76, 153, 91, 0.56) 100%) !important;
     color: #ffffff;
 }
 
 .page-item.active .page-link {
-    font-weight: 700;
-    color: #ffffff;
-    background: rgb(247, 31, 82);
-    background: linear-gradient(87deg, #5A0B87 0%, #CB2376 100%);
-    border: none;
-    margin: 0 10px 0 10px;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    background: rgb(1, 85, 213) !important;
+    background: linear-gradient(87deg, rgba(1, 85, 213, 1) 0%, rgba(76, 153, 91, 1) 100%) !important;
+    border: none !important;
+    margin: 0 10px 0 10px !important;
 }
 
 .page-item.disabled .page-link {
-    color: #7d6f6c;
-    pointer-events: none;
-    cursor: auto;
+    color: #7d6f6c !important;
+    pointer-events: none !important;
+    cursor: auto !important;
 }

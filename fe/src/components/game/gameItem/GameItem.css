@@ -8,6 +8,8 @@
 .blog-card {
     height: 100%;
     width: 500px;
+    margin-right: 30px;
+    margin-left: 30px;
 }
 
 .blog-link {
@@ -16,20 +18,35 @@
 }
 
 .blog-author {
-    width: 40px;
-    height: 40px;
+    width: 50px !important;
+    height: 50px !important;
+    object-fit: cover !important;
 }
 
 .ellipsis {
-    height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space-trim: wrap;
+    white-space: nowrap;
 }
 
-.ellissi-3-righe {
+.ellipsis1 {
     display: -webkit-box;
-    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    /* Numero di righe da visualizzare */
+    /* Altre proprietà per il layout */
+    max-height: 3em;
+    /* Altezza massima di due righe di testo */
+    line-height: 1.5;
+    /* Altezza della riga */
+}
+
+.h_body_1 {
+    height: 60px;
+}
+
+.h_body_2 {
+    height: 45px;
 }
