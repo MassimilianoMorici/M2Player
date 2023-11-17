@@ -132,7 +132,7 @@ const GameList = () => {
     return (
 
 
-        <Container className="mod my-custom-container">
+        <Container className="m-t-mod my-custom-container">
             <div className="d-flex justify-content-evenly">
                 <h1 >GAME</h1>
 

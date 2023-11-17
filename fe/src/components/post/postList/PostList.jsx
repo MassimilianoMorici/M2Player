@@ -47,49 +47,50 @@ const PostList = () => {
 
 
     return (
+        <>
+            <hr />
+            <Container className="m-t my-custom-container">
 
+                <div className="d-flex justify-content-evenly">
+                    <h1>POST</h1>
 
-        <Container className="mod my-custom-container">
-            <div className="d-flex justify-content-evenly">
-                <h1>POST</h1>
+                    <input
+                        className="my_input"
+                        type="text"
+                        placeholder="Cerca per titolo"
+                        value={searchTerm}
+                        onChange={(e) => handleSearchTermChange(e.target.value)}
+                    />
+                </div>
+                <div className="d-flex flex-wrap justify-content-evenly">
+                    {posts &&
+                        posts.posts?.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase())
+                        ).map((post) => {
 
-                <input
-                    className="my_input"
-                    type="text"
-                    placeholder="Cerca per titolo"
-                    value={searchTerm}
-                    onChange={(e) => handleSearchTermChange(e.target.value)}
-                />
-            </div>
-            <div className="d-flex flex-wrap justify-content-evenly">
-                {posts &&
-                    posts.posts?.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase())
-                    ).map((post) => {
-
-                        return (
-                            <PostItem key={post._id}
-                                _id={post._id}
-                                title={post.title}
-                                game={post.game}
-                                category={post.category}
-                                img={post.img}
-                                authorNome={post.author?.firstName}
-                                authorCognome={post.author?.lastName}
-                                authorAvatar={post.author?.avatar}
-                                content={post.content}
-                            />
-                        )
-                    })}
-            </div>
-            <div className="mb-5">
-                <ResponsivePagination
-                    current={currentPage}
-                    total={posts && posts.totalPages}
-                    onPageChange={handlePagination}
-                />
-            </div>
-        </Container>
-
+                            return (
+                                <PostItem key={post._id}
+                                    _id={post._id}
+                                    title={post.title}
+                                    game={post.game}
+                                    category={post.category}
+                                    img={post.img}
+                                    authorNome={post.author?.firstName}
+                                    authorCognome={post.author?.lastName}
+                                    authorAvatar={post.author?.avatar}
+                                    content={post.content}
+                                />
+                            )
+                        })}
+                </div>
+                <div className="mb-5">
+                    <ResponsivePagination
+                        current={currentPage}
+                        total={posts && posts.totalPages}
+                        onPageChange={handlePagination}
+                    />
+                </div>
+            </Container>
+        </>
     );
 };
 

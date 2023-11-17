@@ -11,19 +11,8 @@
     box-shadow: 2px 0px 4px 1px rgba(222, 222, 222, 1);
 }
 
-.blog-navbar-add-button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 160px;
-    text-decoration: none;
-    border: solid 2px rgb(120, 120, 120);
-}
 
-.blog-navbar-add-button:hover {
-    border: solid 2px rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.315) !important;
-}
+
 
 .img-avatar {
     width: 50px;

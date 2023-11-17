@@ -58,7 +58,7 @@
 // export default MyNav;
 
 import React from "react";
-import { Button, Container, Dropdown, NavDropdown, Navbar } from "react-bootstrap";
+import { Container, Dropdown, NavDropdown, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import logoM2 from "../../assets/m2playerLogo.png"
@@ -80,20 +80,18 @@ const MyNav = () => {
     // console.log(session.role);
 
     return (
-        <Navbar expand="lg" className="blog-navbar" fixed="top">
-            <Container className="justify-content-between">
+
+
+        <Navbar className="blog-navbar" fixed="top">
+            <Container className="d-flex justify-content-end">
 
 
                 <Navbar.Brand as={Link} to={session ? "/home" : "/"}>
                     <img className="blog-navbar-brand" alt="logo" src={logoM2} />
                 </Navbar.Brand>
 
-
                 {session &&
-                    <Container className="d-flex justify-content-end">
-
-
-
+                    <Container>
                         <Dropdown className="ms-5">
                             <Dropdown.Toggle variant="transparent" id="dropdown-basic" className="togli-bordo">
                                 <img src={`${session.avatar}`} alt="logo avatar" className="img-avatar" />
@@ -112,10 +110,9 @@ const MyNav = () => {
                         </Dropdown>
                     </Container>}
 
-
-
             </Container>
         </Navbar>
+
     );
 };
 
