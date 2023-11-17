@@ -58,7 +58,7 @@
 // export default MyNav;
 
 import React from "react";
-import { Container, Dropdown, NavDropdown, Navbar } from "react-bootstrap";
+import { Dropdown, NavDropdown, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import logoM2 from "../../assets/m2playerLogo.png"
@@ -80,18 +80,15 @@ const MyNav = () => {
     // console.log(session.role);
 
     return (
-
-
-        <Navbar className="blog-navbar" fixed="top">
-            <Container className="d-flex justify-content-end">
-
-
-                <Navbar.Brand as={Link} to={session ? "/home" : "/"}>
-                    <img className="blog-navbar-brand" alt="logo" src={logoM2} />
-                </Navbar.Brand>
-
-                {session &&
-                    <Container>
+        <div className="container-fluid blog-navbar fixed-top">
+            <div className="d-flex justify-content-evenly align-items-center ">
+                <div>
+                    <Navbar.Brand as={Link} to={session ? "/home" : "/"}>
+                        <img className="blog-navbar-brand" alt="logo" src={logoM2} />
+                    </Navbar.Brand>
+                </div>
+                <div>
+                    {session &&
                         <Dropdown className="ms-5">
                             <Dropdown.Toggle variant="transparent" id="dropdown-basic" className="togli-bordo">
                                 <img src={`${session.avatar}`} alt="logo avatar" className="img-avatar" />
@@ -108,10 +105,42 @@ const MyNav = () => {
                                 <NavDropdown.Item onClick={handleLogout} className="selection" >Logout</NavDropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
-                    </Container>}
+                    }
+                </div>
+            </div>
+        </div>
 
-            </Container>
-        </Navbar>
+        // <Navbar className="blog-navbar" fixed="top">
+        //     <Container className="">
+        //         <Row className="d-flex justify-content-between">
+        //             <Col >
+        //                 <Navbar.Brand as={Link} to={session ? "/home" : "/"}>
+        //                     <img className="blog-navbar-brand" alt="logo" src={logoM2} />
+        //                 </Navbar.Brand>
+
+        //                 {session &&
+
+        //                     <Dropdown className="ms-5">
+        //                         <Dropdown.Toggle variant="transparent" id="dropdown-basic" className="togli-bordo">
+        //                             <img src={`${session.avatar}`} alt="logo avatar" className="img-avatar" />
+        //                         </Dropdown.Toggle>
+
+        //                         <Dropdown.Menu>
+        //                             <NavDropdown.Item className="selection" href="/home">Home</NavDropdown.Item>
+        //                             <NavDropdown.Item className="selection" href="/me">Account</NavDropdown.Item>
+
+        //                             <NavDropdown.Item className="selection" href="/newPost">Nuovo Post</NavDropdown.Item>
+        //                             {session.role === "admin" &&
+        //                                 <NavDropdown.Item className="selection" href="/newGame">Nuovo Game</NavDropdown.Item>}
+        //                             <NavDropdown.Divider />
+        //                             <NavDropdown.Item onClick={handleLogout} className="selection" >Logout</NavDropdown.Item>
+        //                         </Dropdown.Menu>
+        //                     </Dropdown>
+        //                 }
+        //             </Col>
+        //         </Row>
+        //     </Container>
+        // </Navbar>
 
     );
 };

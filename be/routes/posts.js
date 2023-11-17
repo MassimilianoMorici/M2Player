@@ -161,6 +161,7 @@ posts.get('/posts/byTitle', async (req, res) => {
                 $options: 'i'
             }
         })
+            .populate('author')
             .skip(skip)
             .limit(parseInt(limit));
 
