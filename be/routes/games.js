@@ -66,6 +66,7 @@ games.post('/game/create', async (req, res) => {
 //     }
 // })
 
+// GET
 games.get('/games', async (req, res) => {
 
     const { page = 1, pageSize = 4 } = req.query
