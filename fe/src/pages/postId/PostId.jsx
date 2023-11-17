@@ -754,17 +754,21 @@ const PostId = () => {
 
                                 <Container className='box-comment d-flex justify-content-between'>
                                     <div>
-                                        <p>{comment.author?.nome} {comment.author?.cognome}</p>
+                                        <h5>{comment.author?.firstName} {comment.author?.lastName}</h5>
                                         <h2>{comment.title}</h2>
                                         <p>{comment.content}</p>
                                     </div>
 
-                                    {session.id === comment.author?._id && (
-                                        <div>
-                                            <Pen onClick={() => openEditModal(comment)} color="red" size={25} role="button" />
-                                            <Trash3 onClick={handleDeleteClick(comment._id)} color="red" size={25} role="button" className='mx-3' />
-                                        </div>
-                                    )}
+                                    <div>
+                                        {/* se sei l'autore puoi modificare il commento */}
+                                        {session.id === comment.author?._id && (
+                                            <Pen onClick={() => openEditModal(comment)} color="red" size={25} role="button" />)}
+
+                                        {/* se sei l'autore o l'admin puoi eliminare il commento */}
+                                        {(session.id === comment.author?._id || session.role === "admin") && (
+                                            <Trash3 onClick={handleDeleteClick(comment._id)} color="red" size={25} role="button" className='mx-3' />)}
+                                    </div>
+
                                 </Container>
                             </div>
                         )

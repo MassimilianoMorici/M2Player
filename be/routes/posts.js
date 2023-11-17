@@ -125,30 +125,67 @@ posts.get('/post/:postId', async (req, res) => {
 })
 
 // GET BY TITLE
-posts.get('/posts/byTitle', async (req, res) => {
+// posts.get('/posts/byTitle', async (req, res) => {
 
-    const { title } = req.query;
+//     const { title } = req.query;
+
+//     try {
+
+//         const postsByTitle = await PostModel.find({
+//             // fai la ricerca all'interno di title
+//             title: {
+//                 //usiamo gli operatori di mongoose
+//                 $regex: title, // cerca title
+//                 $options: 'i' //case insensitive
+//             }
+//         })
+
+//         res.status(200).send(postsByTitle)
+
+//     } catch (e) {
+//         res.status(500).send({
+//             statusCode: 500,
+//             message: "Internal server error"
+//         })
+//     }
+// })
+posts.get('/posts/byTitle', async (req, res) => {
+    const { title, page = 1, limit = 4 } = req.query;
 
     try {
+        const skip = (page - 1) * limit;
 
         const postsByTitle = await PostModel.find({
-            // fai la ricerca all'interno di title
             title: {
-                //usiamo gli operatori di mongoose
-                $regex: title, // cerca title
-                $options: 'i' //case insensitive
+                $regex: title,
+                $options: 'i'
             }
         })
+            .skip(skip)
+            .limit(parseInt(limit));
 
-        res.status(200).send(postsByTitle)
+        const totalPosts = await PostModel.countDocuments({
+            title: {
+                $regex: title,
+                $options: 'i'
+            }
+        });
 
+        res.status(200).send({
+            posts: postsByTitle,
+            totalPages: Math.ceil(totalPosts / limit)
+        });
     } catch (e) {
         res.status(500).send({
             statusCode: 500,
             message: "Internal server error"
-        })
+        });
     }
-})
+});
+
+
+
+
 
 // GET BY DATE
 posts.get('/posts/byDate/:date', async (req, res) => {

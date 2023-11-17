@@ -195,30 +195,66 @@ games.get('/games/editor/:editor', async (req, res) => {
 });
 
 // GET BY TITLE
-games.get('/games/byTitle', async (req, res) => {
+// games.get('/games/byTitle', async (req, res) => {
 
-    const { title } = req.query;
+//     const { title } = req.query;
+
+//     try {
+
+//         const gamesByTitle = await GameModel.find({
+//             // fai la ricerca all'interno di title
+//             title: {
+//                 //usiamo gli operatori di mongoose
+//                 $regex: title, // cerca title
+//                 $options: 'i' //case insensitive
+//             }
+//         })
+
+//         res.status(200).send(gamesByTitle)
+
+//     } catch (e) {
+//         res.status(500).send({
+//             statusCode: 500,
+//             message: "Internal server error"
+//         })
+//     }
+// })
+games.get('/games/byTitle', async (req, res) => {
+    const { title, page = 1, limit = 4 } = req.query;
 
     try {
+        const skip = (page - 1) * limit;
 
         const gamesByTitle = await GameModel.find({
-            // fai la ricerca all'interno di title
             title: {
-                //usiamo gli operatori di mongoose
-                $regex: title, // cerca title
-                $options: 'i' //case insensitive
+                $regex: title,
+                $options: 'i'
             }
         })
+            .skip(skip)
+            .limit(parseInt(limit));
 
-        res.status(200).send(gamesByTitle)
+        const totalGames = await GameModel.countDocuments({
+            title: {
+                $regex: title,
+                $options: 'i'
+            }
+        });
 
+        res.status(200).send({
+            games: gamesByTitle,
+            totalPages: Math.ceil(totalGames / limit)
+        });
     } catch (e) {
         res.status(500).send({
             statusCode: 500,
             message: "Internal server error"
-        })
+        });
     }
-})
+});
+
+
+
 
 
 // GET BY DATE

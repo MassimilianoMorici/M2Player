@@ -17,32 +17,30 @@ const PostList = () => {
 
     const [currentPage, setCurrentPage] = useState(1)
     const [posts, setPosts] = useState([])
+    const [searchTerm, setSearchTerm] = useState("");
 
     const getPosts = async () => {
-
         try {
-            const response = await client.get(`/posts?page=${currentPage}`)
-            setPosts(response)
-
+            const response = await client.get(`/posts/byTitle?title=${searchTerm}&page=${currentPage}`);
+            setPosts(response);
         } catch (e) {
             console.log(e);
         }
     };
 
-    // for (let i = 0; i < posts.posts.length; i++) {
-    //     console.log(posts.posts[i].content);
-    // }
-
-    // const sanitizedHTML = DOMPurify.sanitize(posts.post?.content);
 
     const handlePagination = (value) => {
         setCurrentPage(value)
     }
 
+    const handleSearchTermChange = (newTerm) => {
+        setSearchTerm(newTerm);
+        setCurrentPage(1); // Imposta currentPage a 1 quando il termine di ricerca cambia
+    };
 
     useEffect(() => {
         getPosts()
-    }, [currentPage]);
+    }, [currentPage, searchTerm]);
 
 
 
@@ -52,25 +50,36 @@ const PostList = () => {
 
 
         <Container className="mod my-custom-container">
-            <h1 className="d-flex justify-content-center">POST</h1>
-            <div className="d-flex flex-wrap justify-content-evenly">
-                {posts && posts.posts?.map((post) => {
-                    // console.log(post);
+            <div className="d-flex justify-content-evenly">
+                <h1>POST</h1>
 
-                    return (
-                        <PostItem key={post._id}
-                            _id={post._id}
-                            title={post.title}
-                            game={post.game}
-                            category={post.category}
-                            img={post.img}
-                            authorNome={post.author?.firstName}
-                            authorCognome={post.author?.lastName}
-                            authorAvatar={post.author?.avatar}
-                            content={post.content}
-                        />
-                    )
-                })}
+                <input
+                    className="my_input"
+                    type="text"
+                    placeholder="Cerca per titolo"
+                    value={searchTerm}
+                    onChange={(e) => handleSearchTermChange(e.target.value)}
+                />
+            </div>
+            <div className="d-flex flex-wrap justify-content-evenly">
+                {posts &&
+                    posts.posts?.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase())
+                    ).map((post) => {
+
+                        return (
+                            <PostItem key={post._id}
+                                _id={post._id}
+                                title={post.title}
+                                game={post.game}
+                                category={post.category}
+                                img={post.img}
+                                authorNome={post.author?.firstName}
+                                authorCognome={post.author?.lastName}
+                                authorAvatar={post.author?.avatar}
+                                content={post.content}
+                            />
+                        )
+                    })}
             </div>
             <div className="mb-5">
                 <ResponsivePagination

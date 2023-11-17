@@ -10,7 +10,7 @@ const GameItem = ({ title, cover, category, platform, editor, rate, _id }) => {
 
     return (
         <Card className="blog-card my-5 ">
-            <Link to={`/post/${_id}`} className="blog-link">
+            <Link to={`/game/${_id}`} className="blog-link">
                 <Card.Img variant="top" src={cover} className="blog-cover" />
                 <Card.Body>
                     <Container>

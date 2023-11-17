@@ -17,7 +17,7 @@ const MyFooter = () => {
 
                         <p className='mt-3'>Centro assistenza</p>
                         <p className='mt-3'>Note legali</p>
-                        <p className='mt-3'>© 2023 Max EPIBOOKS, Inc.</p>
+                        <p className='mt-3'>2023 M2PLAYER</p>
                     </div>
 
                     <div>

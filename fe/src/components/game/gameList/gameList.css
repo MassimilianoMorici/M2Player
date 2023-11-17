@@ -93,3 +93,23 @@
     pointer-events: none !important;
     cursor: auto !important;
 }
+
+
+.my_input {
+
+    padding-left: 20px;
+    border-radius: 10px;
+    border: solid 2px rgb(66, 66, 66);
+    box-shadow: 2px 2px 2px rgb(101, 101, 101);
+}
+
+.my_input:hover {
+    border: solid 2px rgb(137, 137, 137);
+    box-shadow: 5px 5px 5px rgb(85, 85, 85);
+}
+
+.my_input:focus {
+    border: solid 2px rgb(28, 28, 28);
+    box-shadow: 5px 5px 5px rgb(42, 42, 42);
+    outline: none;
+}
