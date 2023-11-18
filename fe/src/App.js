@@ -8,6 +8,7 @@ import ProtectedRoutes from "./middleware/ProtectedRoutes";
 import PostId from "./pages/postId/PostId";
 import GameId from "./pages/gameId/GameId";
 import NewGame from "./pages/newGame/NewGame";
+import Account from "./pages/account/Account";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/newGame" element={<NewGame />} />
           <Route path="/post/:id" element={<PostId />} />
           <Route path="/game/:id" element={<GameId />} />
+          <Route path="/me" element={<Account />} />
         </Route>
 
       </Routes>

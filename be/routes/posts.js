@@ -273,6 +273,36 @@ posts.get('/posts/category/:category', async (req, res) => {
     }
 });
 
+// GET all posts by account
+posts.get('/posts/allPostsAccount/:accountId', async (req, res) => {
+    try {
+        const accountId = req.params.accountId; // Utilizza 'accountId' anziché 'postId'
+        const posts = await PostModel.find({ author: accountId })
+            .populate('author');
+
+        if (!posts || posts.length === 0) {
+            return res.status(404).send({
+                statusCode: 404,
+                message: "Nessun post trovato per questo account"
+            });
+        }
+
+        res.status(200).send({
+            statusCode: 200,
+            posts
+        });
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).send({
+            statusCode: 500,
+            message: "Errore interno del server"
+        });
+    }
+});
+
+
+
 
 // PATCH
 posts.patch('/post/update/:postId', async (req, res) => {

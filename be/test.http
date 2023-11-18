@@ -133,6 +133,11 @@ GET http://localhost:5050/posts/byDate/2023-11-08
 GET http://localhost:5050/posts/category/Nuove uscite
 
 ####
+#GET POSTS BY ACCOUNT
+GET http://localhost:5050/posts/allPostsAccount/6553a0e528ab59e2f235fb5e
+
+
+####
 #PATCH GAME
 PATCH http://localhost:5050/post/update/654a6fd89675daa333386f17 HTTP/1.1
 Content-Type: application/json
