@@ -101,11 +101,13 @@ games.get('/game/:gameId', async (req, res) => {
 
     try {
         const game = await GameModel.findById(gameId)
+
         if (!game) {
             return res.status(404).send({
                 statusCode: 404,
                 message: "Game not found"
             })
+
         }
 
         res.status(200).send({

@@ -35,13 +35,13 @@ const GameItem = ({ title, cover, category, platform, editor, rate, _id }) => {
 
                 </Card.Body>
             </Link>
-            <Card.Footer>
-                <Row>
-                    <Col>
-                        <h6>{editor}</h6>
-                        <h6>{rate}</h6>
-                    </Col>
-                </Row>
+            <Card.Footer className="bg-card-mod" >
+
+                <div className="d-flex justify-content-between card-foot-mod">
+                    <h6>{editor}</h6>
+                    <h6>VOTO: {rate}</h6>
+                </div>
+
             </Card.Footer>
         </Card >
     )

@@ -670,28 +670,23 @@ const PostId = () => {
 
             <div className="blog-details-root">
 
-                <Container>
+                <div className='container'>
                     <Image className="blog-details-cover" src={posts.post?.img} fluid />
                     <div className='d-flex justify-content-between align-items-center mt-5'>
                         <h1 className="blog-details-title">{posts.post?.title}</h1>
-                        <div>
-                            <h3>Categoria: {posts.post?.category}</h3>
+                    </div>
+                    <div className="blog-details-author justify-content-between align-items-center mt-3">
+                        <h3>Categoria: {posts.post?.category}</h3>
 
-
-
+                        <div className='d-flex align-items-center'>
+                            <img src={`${posts.post?.author.avatar}`} alt="img" />
+                            <p>{`${posts.post?.author.firstName} ${posts.post?.author.lastName}`}</p>
                         </div>
-
-
                     </div>
-                    <div className="blog-details-author justify-content-end">
-                        <img src={`${posts.post?.author.avatar}`} alt="img" />
-                        <p>{`${posts.post?.author.firstName} ${posts.post?.author.lastName}`}</p>
-                    </div>
-                    <div className='mt-4'>
+                    <div className='mt-5'>
                         <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
                     </div>
-
-                </Container>
+                </div>
 
                 <hr className='my-5' />
 

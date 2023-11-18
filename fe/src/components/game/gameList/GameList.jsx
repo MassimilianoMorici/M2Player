@@ -158,6 +158,8 @@ const GameList = () => {
                                 category={post.category}
                                 cover={post.cover}
                                 platform={post.platform}
+                                editor={post.editor}
+                                rate={post.rate}
                             />
                         )
                     })}
