@@ -474,7 +474,7 @@ import AxiosClient from '../../client/client';
 import useSession from '../../hooks/useSession';
 import { Trash3, Pen } from 'react-bootstrap-icons';
 
-
+import { Link } from "react-router-dom";
 
 
 import "./postId.css";
@@ -689,6 +689,11 @@ const PostId = () => {
                 </div>
 
                 <hr className='my-5' />
+
+                <div>
+                    <Link to={`/modPost/${posts.post?._id}`}
+                    >MOD</Link>
+                </div>
 
                 <Container>
                     <h1 className="blog-details-title mb-5">Aggiungi commento</h1>

@@ -304,6 +304,73 @@ posts.get('/posts/allPostsAccount/:accountId', async (req, res) => {
 
 
 
+
+
+
+// PATCH CLOUDINARY
+// Aggiungi questa route per la modifica dell'immagine
+// posts.patch('/account/cloudUpload', cloudUpload.single('avatar'), async (req, res) => {
+//     try {
+//         // Verifica se l'utente ha già un'immagine e la elimina se necessario
+//         if (req.user.avatar) {
+//             // Estrai il public_id dall'URL dell'immagine esistente
+//             const publicId = req.user.avatar.match(//upload/(.+)//)[1];
+
+//                 // Elimina l'immagine esistente da Cloudinary
+//                 await cloudinary.uploader.destroy(publicId);
+//         }
+
+//         // Aggiorna il percorso dell'avatar per l'utente
+//         req.user.avatar = req.file.path;
+
+//         // Salva le modifiche all'utente nel database (o nel tuo sistema di archiviazione)
+//         await req.user.save();
+
+//         res.status(200).json({ avatar: req.file.path });
+//     } catch (e) {
+//         console.error(e);
+//         res.status(500).send({
+//             statusCode: 500,
+//             message: "Errore Interno del server"
+//         });
+//     }
+// });
+
+posts.patch('/posts/cloudUpload/:postId', cloudUpload.single('img'), async (req, res) => {
+    const postId = req.params.postId; // Ottenere l'ID del post da aggiornare
+    try {
+        // Supponiamo che tu abbia un modello o una funzione per recuperare il post dal database
+        const post = await PostModel.findById(postId); // Sostituisci con il metodo reale per recuperare il post
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post non trovato' });
+        }
+
+        // Aggiorna il percorso dell'immagine nel post
+        post.img = req.file.path; // Assumendo che il percorso dell'immagine sia memorizzato in req.file.path
+
+        // Salva il post aggiornato nel database
+        await post.save(); // Sostituisci con il metodo reale per salvare nel database
+
+        res.status(200).json({ postId, updatedImgPath: req.file.path }); // Restituisci l'ID del post e il percorso dell'immagine aggiornato
+    } catch (e) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Errore Interno del server durante l'aggiornamento"
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
 // PATCH
 posts.patch('/post/update/:postId', async (req, res) => {
     const { postId } = req.params;

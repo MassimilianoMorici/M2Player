@@ -219,6 +219,81 @@ comments.delete('/comment/delete/:commentId', async (req, res) => {
     }
 })
 
+// DELETE all comments by POST ID
+comments.delete('/post/:postId/deleteAllComment', async (req, res) => {
+    try {
+        const postId = req.params.postId;
+        const post = await PostModel.findById(postId)
+
+        if (!post) {
+            return res.status(404).send({
+                statusCode: 404,
+                message: "Post not found"
+            })
+        }
+
+        const comments = await CommentModel.find({ post: postId })
+        if (!comments || comments.length === 0) {
+            return res.status(404).send({
+                statusCode: 404,
+                message: "No comments found for this post"
+            })
+        }
+
+        // Eliminazione dei commenti associati al post
+        await CommentModel.deleteMany({ post: postId })
+
+        res.status(200).send({
+            statusCode: 200,
+            message: "All comments for the post have been deleted"
+        })
+
+    } catch (e) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Internal server error"
+        })
+    }
+})
+
+
+// DELETE all comments by GAME ID
+comments.delete('/game/:gameId/deleteAllComment', async (req, res) => {
+    try {
+        const gameId = req.params.gameId;
+        const game = await GameModel.findById(gameId)
+
+        if (!game) {
+            return res.status(404).send({
+                statusCode: 404,
+                message: "Game not found"
+            })
+        }
+
+        const comments = await CommentModel.find({ game: gameId })
+        if (!comments || comments.length === 0) {
+            return res.status(404).send({
+                statusCode: 404,
+                message: "No comments found for this game"
+            })
+        }
+
+        // Eliminazione dei commenti associati al game
+        await CommentModel.deleteMany({ game: gameId })
+
+        res.status(200).send({
+            statusCode: 200,
+            message: "All comments for the game have been deleted"
+        })
+
+    } catch (e) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Internal server error"
+        })
+    }
+})
+
 
 
 

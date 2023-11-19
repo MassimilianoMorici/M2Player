@@ -9,6 +9,7 @@ import PostId from "./pages/postId/PostId";
 import GameId from "./pages/gameId/GameId";
 import NewGame from "./pages/newGame/NewGame";
 import Account from "./pages/account/Account";
+import ModPost from "./pages/modPost/ModPost";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/home" element={<Home />} />
           <Route path="/newPost" element={<NewPost />} />
+          <Route path="/modPost/:id" element={<ModPost />} />
           <Route path="/newGame" element={<NewGame />} />
           <Route path="/post/:id" element={<PostId />} />
           <Route path="/game/:id" element={<GameId />} />

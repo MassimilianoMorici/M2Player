@@ -191,6 +191,13 @@ Content-Type: application/json
 #DELETE COMMENT
 DELETE http://localhost:5050/comment/delete/654cf9d40891acd9099bee8d
 
+####
+#DELETE ALL COMMENT IN SINGLE POST
+DELETE http://localhost:5050/post/6556468cb9cf414114949481/deleteAllComment
+
+####
+#DELETE ALL COMMENT IN SINGLE GAME
+DELETE http://localhost:5050/game/655788acf4f2c23ac1e6a62c/deleteAllComment
 
 
 ########################### LOGIN
