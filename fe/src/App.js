@@ -10,11 +10,14 @@ import GameId from "./pages/gameId/GameId";
 import NewGame from "./pages/newGame/NewGame";
 import Account from "./pages/account/Account";
 import ModPost from "./pages/modPost/ModPost";
+import ModGame from "./pages/modGame/ModGame";
+import ScrollToTop from "./hooks/useScrollRestoration";
 
 function App() {
   return (
 
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" exact element={<Login />} />
         <Route path="/newAccount" element={<NewAccount />} />
@@ -24,6 +27,7 @@ function App() {
           <Route path="/newPost" element={<NewPost />} />
           <Route path="/modPost/:id" element={<ModPost />} />
           <Route path="/newGame" element={<NewGame />} />
+          <Route path="/modGame/:id" element={<ModGame />} />
           <Route path="/post/:id" element={<PostId />} />
           <Route path="/game/:id" element={<GameId />} />
           <Route path="/me" element={<Account />} />

@@ -15,7 +15,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button, Container, Form, Image, Modal } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import MainLayout from '../../layouts/MainLayout';
@@ -33,6 +33,7 @@ const GameId = () => {
 
     const session = useSession()
     const client = new AxiosClient()
+    const navigate = useNavigate()
     const { id } = useParams();
     const [posts, setPosts] = useState([])
 
@@ -213,6 +214,42 @@ const GameId = () => {
     };
 
 
+    //DELETE del game con controllo ed eliminazione dei commenti relativi
+    const deleteGame = async () => {
+
+        // Se ci sono commenti
+        if (viewComments.comments.length > 0) {
+            try {
+                const responseComments = await client.delete(`/game/${id}/deleteAllComment`);
+
+                if (responseComments.statusCode === 200) {
+                    console.log("Eliminazione commenti del game avvenuta con successo");
+                } else {
+                    console.error("Errore durante l'eliminazione dei commenti del game", responseComments);
+                }
+
+            } catch (error) {
+                console.error("Errore generico durante l'eliminazione", error);
+            }
+        }
+
+        try {
+
+            // Procedi con l'eliminazione del game
+            const responseGame = await client.delete(`/game/delete/${id}`);
+
+            if (responseGame.statusCode === 200) {
+                navigate('/home');
+                console.log("Eliminazione game avvenuta con successo");
+            } else {
+                console.error("Errore durante l'eliminazione del game", responseGame);
+            }
+        } catch (error) {
+            console.error("Errore generico durante l'eliminazione", error);
+        }
+    };
+
+
 
     return (
         <MainLayout>
@@ -231,6 +268,18 @@ const GameId = () => {
                         <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
                     </div>
                 </div>
+
+
+
+                {/* se sei l'autore puoi modificare o eliminare il post */}
+                {session.role === "admin" && (
+                    <div className='container d-flex justify-content-end'>
+                        <Link to={`/modGame/${posts.game?._id}`}>
+                            <Button variant="outline-primary">Modifica</Button>
+                        </Link>
+                        <Button onClick={deleteGame} variant="outline-success" className='ms-2'>Elimina</Button>
+                    </div>
+                )}
 
                 <hr className='my-5' />
 

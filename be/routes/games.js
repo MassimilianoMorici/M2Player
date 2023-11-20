@@ -307,6 +307,35 @@ games.get('/games/byDate/:date', async (req, res) => {
 })
 
 
+// PATCH CLOUDINARY
+games.patch('/game/cloudUpload/:gameId', cloudUpload.single('cover'), async (req, res) => {
+    const gameId = req.params.gameId; // Ottenere l'ID del post da aggiornare
+    try {
+        // Supponiamo che tu abbia un modello o una funzione per recuperare il post dal database
+        const game = await GameModel.findById(gameId); // Sostituisci con il metodo reale per recuperare il post
+
+        if (!game) {
+            return res.status(404).json({ message: 'Game non trovato' });
+        }
+
+        // Aggiorna il percorso dell'immagine nel post
+        game.cover = req.file.path; // Assumendo che il percorso dell'immagine sia memorizzato in req.file.path
+
+        // Salva il post aggiornato nel database
+        await game.save(); // Sostituisci con il metodo reale per salvare nel database
+
+        res.status(200).json({ gameId, updatedImgPath: req.file.path }); // Restituisci l'ID del post e il percorso dell'immagine aggiornato
+    } catch (e) {
+        res.status(500).send({
+            statusCode: 500,
+            message: "Errore Interno del server durante l'aggiornamento"
+        });
+    }
+});
+
+
+
+
 // PATCH
 games.patch('/game/update/:gameId', async (req, res) => {
     const { gameId } = req.params;

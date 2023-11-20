@@ -552,10 +552,8 @@ import useSession from "../../hooks/useSession";
 import MainLayout from "../../layouts/MainLayout";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import "./modPost.css";
 import "./_textEditor.scss"
 
-import DOMPurify from 'dompurify';
 import AxiosClient from "../../client/client";
 import { useParams } from 'react-router-dom';
 

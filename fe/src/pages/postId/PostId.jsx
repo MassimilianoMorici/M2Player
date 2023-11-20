@@ -466,7 +466,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button, Container, Form, Image, Modal } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import MainLayout from '../../layouts/MainLayout';
@@ -474,7 +474,6 @@ import AxiosClient from '../../client/client';
 import useSession from '../../hooks/useSession';
 import { Trash3, Pen } from 'react-bootstrap-icons';
 
-import { Link } from "react-router-dom";
 
 
 import "./postId.css";
@@ -484,6 +483,7 @@ const PostId = () => {
 
     const session = useSession()
     const client = new AxiosClient()
+    const navigate = useNavigate()
     const { id } = useParams();
     const [posts, setPosts] = useState([])
 
@@ -665,6 +665,43 @@ const PostId = () => {
 
 
 
+    //DELETE del post con controllo ed eliminazione dei commenti relativi
+    const deletePost = async () => {
+
+        // Se ci sono commenti
+        if (viewComments.comments.length > 0) {
+            try {
+                const responseComments = await client.delete(`/post/${id}/deleteAllComment`);
+
+                if (responseComments.statusCode === 200) {
+                    console.log("Eliminazione commenti del post avvenuta con successo");
+                } else {
+                    console.error("Errore durante l'eliminazione dei commenti del post", responseComments);
+                }
+
+            } catch (error) {
+                console.error("Errore generico durante l'eliminazione", error);
+            }
+        }
+
+        try {
+
+            // Procedi con l'eliminazione del post
+            const responsePost = await client.delete(`/post/delete/${id}`);
+
+            if (responsePost.statusCode === 200) {
+                navigate('/home');
+                console.log("Eliminazione post avvenuta con successo");
+            } else {
+                console.error("Errore durante l'eliminazione del post", responsePost);
+            }
+        } catch (error) {
+            console.error("Errore generico durante l'eliminazione", error);
+        }
+    };
+
+
+
     return (
         <MainLayout>
 
@@ -688,12 +725,17 @@ const PostId = () => {
                     </div>
                 </div>
 
-                <hr className='my-5' />
+                {/* se sei l'autore puoi modificare o eliminare il post */}
+                {session.id === posts.post?.author._id && (
+                    <div className='container d-flex justify-content-end'>
+                        <Link to={`/modPost/${posts.post?._id}`}>
+                            <Button variant="outline-primary">Modifica</Button>
+                        </Link>
+                        <Button onClick={deletePost} variant="outline-success" className='ms-2'>Elimina</Button>
+                    </div>
+                )}
 
-                <div>
-                    <Link to={`/modPost/${posts.post?._id}`}
-                    >MOD</Link>
-                </div>
+                <hr className='my-5' />
 
                 <Container>
                     <h1 className="blog-details-title mb-5">Aggiungi commento</h1>
