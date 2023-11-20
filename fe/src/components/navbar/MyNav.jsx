@@ -88,6 +88,13 @@ const MyNav = () => {
                     </Navbar.Brand>
                 </div>
                 <div>
+                    <ul>
+                        <li><a href="/allGame">Game</a></li>
+                        <li><a href="/allPost">Post</a></li>
+                    </ul>
+                </div>
+
+                <div>
                     {session &&
                         <Dropdown className="ms-5">
                             <Dropdown.Toggle variant="transparent" id="dropdown-basic" className="togli-bordo">

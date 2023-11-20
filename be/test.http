@@ -69,7 +69,7 @@ GET http://localhost:5050/game/6548f87f8c21e22333981daf
 
 ####
 #GET GAME BY CATEGORY
-GET http://localhost:5050/games/category/Adventure
+GET http://localhost:5050/games/category/MMORPG
 
 ####
 #GET GAME BY EDITOR

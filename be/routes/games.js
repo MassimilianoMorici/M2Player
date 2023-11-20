@@ -50,42 +50,14 @@ games.post('/game/create', async (req, res) => {
 })
 
 // GET
-// games.get('/games', async (req, res) => {
-//     try {
-//         const games = await GameModel.find()
-
-//         res.status(200).send({
-//             statusCode: 200,
-//             games
-//         })
-//     } catch (e) {
-//         res.status(500).send({
-//             statusCode: 500,
-//             message: "Internal server error"
-//         })
-//     }
-// })
-
-// GET
 games.get('/games', async (req, res) => {
-
-    const { page = 1, pageSize = 4 } = req.query
-
     try {
         const games = await GameModel.find()
-            .limit(pageSize)
-            .skip((page - 1) * pageSize)
-
-        const totalGame = await GameModel.count()
 
         res.status(200).send({
             statusCode: 200,
-            currentPage: Number(page),
-            totalPages: Math.ceil(totalGame / pageSize),
-            totalGame,
             games
         })
-
     } catch (e) {
         res.status(500).send({
             statusCode: 500,
@@ -93,6 +65,34 @@ games.get('/games', async (req, res) => {
         })
     }
 })
+
+// GET
+// games.get('/games', async (req, res) => {
+
+//     const { page = 1, pageSize = 4 } = req.query
+
+//     try {
+//         const games = await GameModel.find()
+//             .limit(pageSize)
+//             .skip((page - 1) * pageSize)
+
+//         const totalGame = await GameModel.count()
+
+//         res.status(200).send({
+//             statusCode: 200,
+//             currentPage: Number(page),
+//             totalPages: Math.ceil(totalGame / pageSize),
+//             totalGame,
+//             games
+//         })
+
+//     } catch (e) {
+//         res.status(500).send({
+//             statusCode: 500,
+//             message: "Internal server error"
+//         })
+//     }
+// })
 
 
 // GET BY ID
@@ -143,7 +143,7 @@ games.get('/games/category/:category', async (req, res) => {
 
             res.status(200).send({
                 statusCode: 200,
-                accounts: filteredGames
+                games: filteredGames
             });
         } else {
             res.status(400).send({

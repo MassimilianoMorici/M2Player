@@ -705,8 +705,6 @@ const ModPost = () => {
 
 
 
-    console.log("sto cazzo:", formData);
-
 
 
     // const onSubmit = async (e) => {

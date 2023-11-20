@@ -11,6 +11,8 @@ import NewGame from "./pages/newGame/NewGame";
 import Account from "./pages/account/Account";
 import ModPost from "./pages/modPost/ModPost";
 import ModGame from "./pages/modGame/ModGame";
+import CategoryGame from "./pages/categoryGame/CategoryGame";
+import CategoryPost from "./pages/categoryPost/CategoryPost";
 import ScrollToTop from "./hooks/useScrollRestoration";
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           <Route path="/modPost/:id" element={<ModPost />} />
           <Route path="/newGame" element={<NewGame />} />
           <Route path="/modGame/:id" element={<ModGame />} />
+          <Route path="/allGame" element={<CategoryGame />} />
+          <Route path="/allPost" element={<CategoryPost />} />
           <Route path="/post/:id" element={<PostId />} />
           <Route path="/game/:id" element={<GameId />} />
           <Route path="/me" element={<Account />} />

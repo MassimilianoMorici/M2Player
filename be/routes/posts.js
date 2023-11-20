@@ -257,7 +257,7 @@ posts.get('/posts/category/:category', async (req, res) => {
 
             res.status(200).send({
                 statusCode: 200,
-                accounts: filteredPosts
+                posts: filteredPosts
             });
         } else {
             res.status(400).send({
