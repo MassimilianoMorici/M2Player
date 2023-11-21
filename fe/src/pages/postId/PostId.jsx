@@ -872,12 +872,15 @@ import useSession from '../../hooks/useSession';
 import { Trash3, Pen, CheckCircleFill } from 'react-bootstrap-icons';
 import AlertMessage from '../../components/alertMessage/AlertMessage';
 
-
+import { useLoading } from '../../contexts/LoadingContext';
+import { MoonLoader } from 'react-spinners'
 
 import "./postId.css";
 
 
 const PostId = () => {
+
+    const { isLoading, setIsLoading } = useLoading();
 
     const session = useSession()
     const client = new AxiosClient()
@@ -900,19 +903,33 @@ const PostId = () => {
     const getPost = async () => {
 
         try {
+            setIsLoading(true)
             const response = await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/post/${id}`);
             const data = await response.json()
             setPosts(data)
-
-
+            setIsLoading(false)
         } catch (e) {
             console.log(e);
         }
     };
 
+
     useEffect(() => {
         getPost();
     }, []);
+
+
+    //loading in useEffect
+    // useEffect(() => {
+    //     setIsLoading(true);
+    //     setTimeout(() => {
+
+
+    //         getPost();
+
+    //         setIsLoading(false);
+    //     }, 2000);
+    // }, [setIsLoading]);
 
     // console.log(posts);
 
@@ -1133,7 +1150,14 @@ const PostId = () => {
 
             <div className="blog-details-root">
 
+
                 <div className='container'>
+
+                    {isLoading && (
+                        <div className='container d-flex justify-content-center porcozio'>
+                            <MoonLoader />
+                        </div>
+                    )}
                     <Image className="blog-details-cover" src={posts.post?.img} fluid />
                     <div className='d-flex justify-content-between align-items-center mt-5'>
                         <h1 className="blog-details-title">{posts.post?.title}</h1>
@@ -1149,17 +1173,18 @@ const PostId = () => {
                     <div className='mt-5'>
                         <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
                     </div>
+
+                    {/* se sei l'autore puoi modificare o eliminare il post */}
+                    {session.id === posts.post?.author._id && (
+                        <div className='container d-flex justify-content-end'>
+                            <Link to={`/modPost/${posts.post?._id}`}>
+                                <Button variant="outline-primary">Modifica</Button>
+                            </Link>
+                            <Button onClick={deletePost} variant="outline-success" className='ms-2'>Elimina</Button>
+                        </div>
+                    )}
                 </div>
 
-                {/* se sei l'autore puoi modificare o eliminare il post */}
-                {session.id === posts.post?.author._id && (
-                    <div className='container d-flex justify-content-end'>
-                        <Link to={`/modPost/${posts.post?._id}`}>
-                            <Button variant="outline-primary">Modifica</Button>
-                        </Link>
-                        <Button onClick={deletePost} variant="outline-success" className='ms-2'>Elimina</Button>
-                    </div>
-                )}
 
                 <hr className='my-5' />
 
