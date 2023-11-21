@@ -37,7 +37,6 @@ const CategoryPost = () => {
     }, [value])
 
 
-
     return (
         <MainLayout>
 

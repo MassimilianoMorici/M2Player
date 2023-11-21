@@ -54,6 +54,7 @@ posts.get('/posts', async (req, res) => {
 
     try {
         const posts = await PostModel.find()
+            .populate('author')
 
         res.status(200).send({
             statusCode: 200,
