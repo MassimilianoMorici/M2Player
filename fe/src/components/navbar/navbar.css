@@ -43,3 +43,24 @@
     background: rgb(1, 85, 213);
     background: linear-gradient(87deg, rgba(1, 85, 213, 1) 0%, rgba(76, 153, 91, 1) 100%);
 }
+
+.nav-a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: large;
+    /*transition: font-size 0.3s ease;*/
+    transition: transform 0.3s ease;
+    display: inline-block;
+    /* Importante per gestire lo spazio */
+}
+
+.nav-a:hover {
+    /* font-size: 26px; */
+    transform: scale(1.2);
+    transform-origin: center;
+}
+
+.tag-ul {
+    list-style: none;
+}

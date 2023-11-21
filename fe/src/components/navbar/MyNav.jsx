@@ -81,18 +81,27 @@ const MyNav = () => {
 
     return (
         <div className="container-fluid blog-navbar fixed-top">
-            <div className="d-flex justify-content-evenly align-items-center ">
-                <div>
-                    <Navbar.Brand as={Link} to={session ? "/home" : "/"}>
-                        <img className="blog-navbar-brand" alt="logo" src={logoM2} />
-                    </Navbar.Brand>
+            <div className="d-flex justify-content-between align-items-center ">
+                <div className="d-flex align-items-center">
+                    <div>
+                        <Navbar.Brand as={Link} to={session ? "/home" : "/"}>
+                            <img className="blog-navbar-brand" alt="logo" src={logoM2} />
+                        </Navbar.Brand>
+                    </div>
+
+                    <div>
+                        <ul className="d-flex tag-ul">
+                            <li className="mx-3"><a className="nav-a" href="/allGame">Game</a></li>
+                            <li className="mx-3 "><a className="nav-a" href="/allPost">Post</a></li>
+                        </ul>
+                    </div>
+                </div>
+                {/* <div>
+                    <p className="mx-2"><a className="nav-a" href="/allGame">Game</a></p>
                 </div>
                 <div>
-                    <ul>
-                        <li><a href="/allGame">Game</a></li>
-                        <li><a href="/allPost">Post</a></li>
-                    </ul>
-                </div>
+                    <p className="mx-2 "><a className="nav-a" href="/allPost">Post</a></p>
+                </div> */}
 
                 <div>
                     {session &&
@@ -104,10 +113,13 @@ const MyNav = () => {
                             <Dropdown.Menu>
                                 <NavDropdown.Item className="selection" href="/home">Home</NavDropdown.Item>
                                 <NavDropdown.Item className="selection" href="/me">Account</NavDropdown.Item>
-
                                 <NavDropdown.Item className="selection" href="/newPost">Nuovo Post</NavDropdown.Item>
-                                {session.role === "admin" &&
-                                    <NavDropdown.Item className="selection" href="/newGame">Nuovo Game</NavDropdown.Item>}
+                                {session.role === "admin" && (
+                                    <>
+                                        <NavDropdown.Item className="selection" href="/newGame">Nuovo Game</NavDropdown.Item>
+                                        <NavDropdown.Item className="selection" href="/gestionale">Gestionale</NavDropdown.Item>
+                                    </>
+                                )}
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={handleLogout} className="selection" >Logout</NavDropdown.Item>
                             </Dropdown.Menu>
@@ -115,7 +127,7 @@ const MyNav = () => {
                     }
                 </div>
             </div>
-        </div>
+        </div >
 
         // <Navbar className="blog-navbar" fixed="top">
         //     <Container className="">

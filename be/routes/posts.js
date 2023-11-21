@@ -50,44 +50,15 @@ posts.post('/post/create', async (req, res) => {
 })
 
 // GET
-// posts.get('/posts', async (req, res) => {
-
-//     try {
-//         const posts = await PostModel.find()
-
-//         res.status(200).send({
-//             statusCode: 200,
-//             posts
-//         })
-//     } catch (e) {
-//         res.status(500).send({
-//             statusCode: 500,
-//             message: "Internal server error"
-//         })
-//     }
-// })
-
-// GET
 posts.get('/posts', async (req, res) => {
-
-    const { page = 1, pageSize = 4 } = req.query
 
     try {
         const posts = await PostModel.find()
-            .populate('author')
-            .limit(pageSize)
-            .skip((page - 1) * pageSize)
-
-        const totalPost = await PostModel.count()
 
         res.status(200).send({
             statusCode: 200,
-            currentPage: Number(page),
-            totalPages: Math.ceil(totalPost / pageSize),
-            totalPost,
             posts
         })
-
     } catch (e) {
         res.status(500).send({
             statusCode: 500,
@@ -95,6 +66,35 @@ posts.get('/posts', async (req, res) => {
         })
     }
 })
+
+// GET
+// posts.get('/posts', async (req, res) => {
+
+//     const { page = 1, pageSize = 4 } = req.query
+
+//     try {
+//         const posts = await PostModel.find()
+//             .populate('author')
+//             .limit(pageSize)
+//             .skip((page - 1) * pageSize)
+
+//         const totalPost = await PostModel.count()
+
+//         res.status(200).send({
+//             statusCode: 200,
+//             currentPage: Number(page),
+//             totalPages: Math.ceil(totalPost / pageSize),
+//             totalPost,
+//             posts
+//         })
+
+//     } catch (e) {
+//         res.status(500).send({
+//             statusCode: 500,
+//             message: "Internal server error"
+//         })
+//     }
+// })
 
 
 // GET BY ID
@@ -253,7 +253,8 @@ posts.get('/posts/category/:category', async (req, res) => {
         // Verifica se il ruolo specificato è valido
         if (validCategorys.includes(requestedCategory)) {
             // Utilizza la funzione `find` di Mongoose per ottenere gli account con il ruolo specificato
-            const filteredPosts = await PostModel.find({ category: requestedCategory });
+            const filteredPosts = await PostModel.find({ category: requestedCategory })
+                .populate('author');
 
             res.status(200).send({
                 statusCode: 200,

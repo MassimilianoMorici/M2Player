@@ -1,0 +1,40 @@
+.pGestionale-main {
+    margin-top: 200px;
+}
+
+
+
+.p-account-img {
+    width: 600px;
+    height: 600px;
+    border-radius: 10px;
+    object-fit: cover;
+    object-position: 0% 0%;
+}
+
+.p-account-details {
+    margin-top: 200px;
+    text-align: center;
+}
+
+.img-postmap {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+
+
+}
+
+.p-account-box-singlePost {
+    white-space: nowrap;
+    /* Impedisce il wrapping del testo */
+    overflow: hidden;
+    /* Nasconde il testo che supera i limiti del contenitore */
+    text-overflow: ellipsis;
+    text-decoration: none;
+    color: black;
+    padding: 5px 20px 5px 5px;
+    border: solid 2px rgba(168, 168, 168, 0.427);
+    border-radius: 30px;
+}
