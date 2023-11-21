@@ -21,7 +21,9 @@ import DOMPurify from 'dompurify';
 import MainLayout from '../../layouts/MainLayout';
 import AxiosClient from '../../client/client';
 import useSession from '../../hooks/useSession';
-import { Trash3, Pen } from 'react-bootstrap-icons';
+import { Trash3, Pen, CheckCircleFill } from 'react-bootstrap-icons';
+import AlertMessage from '../../components/alertMessage/AlertMessage';
+import { PacmanLoader } from 'react-spinners'
 
 
 
@@ -35,7 +37,11 @@ const GameId = () => {
     const client = new AxiosClient()
     const navigate = useNavigate()
     const { id } = useParams();
+
     const [posts, setPosts] = useState([])
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingComments, setIsLoadingComments] = useState(false);
 
     const [newComment, setNewComment] = useState({
         title: "",
@@ -49,10 +55,11 @@ const GameId = () => {
     const getPost = async () => {
 
         try {
+            setIsLoading(true)
             const response = await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/game/${id}`);
             const data = await response.json()
             setPosts(data)
-
+            setIsLoading(false)
 
         } catch (e) {
             console.log(e);
@@ -94,10 +101,13 @@ const GameId = () => {
                 },
             });
             if (response.statusCode === 201) {
-                console.log("Blog post created successfully:", response.payload);
+                console.log("Commento creato con successo: ", response.payload);
             } else {
-                console.error("Errore nella creazione del blog post");
+                console.error("Errore nella creazione del commento");
             }
+
+            setSuccessMessage("Commento creato con successo!");
+            getPosts()
 
             setNewComment({
                 title: "",
@@ -106,7 +116,10 @@ const GameId = () => {
                 game: id,
             })
 
-            getPosts()
+            setTimeout(() => {
+                setSuccessMessage(null);
+            }, 3000);
+
 
         } catch (e) {
             console.error("Errore nella richiesta al server:", e);
@@ -121,10 +134,11 @@ const GameId = () => {
     const getPosts = async () => {
 
         try {
+            setIsLoadingComments(true)
             const response = await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/game/viewComments/${id}`);
             const data = await response.json()
             setViewComments(data)
-
+            setIsLoadingComments(false)
 
         } catch (e) {
             console.log(e);
@@ -149,7 +163,14 @@ const GameId = () => {
                 console.error("Errore nella eliminazione del commento");
             }
 
+            setSuccessMessage("Commento eliminato con successo!");
+
             getPosts()
+
+            setTimeout(() => {
+                setSuccessMessage(null);
+            }, 3000);
+
         } catch (e) {
             console.error("Errore nella richiesta al server:", e);
         }
@@ -204,7 +225,12 @@ const GameId = () => {
             if (response.statusCode === 200) {
                 console.log("Commento modificato con successo");
                 setShowEditModal(false);
-                getPosts();
+                setSuccessMessage("Commento modificato con successo!");
+                getPosts()
+                setTimeout(() => {
+                    setSuccessMessage(null);
+                }, 3000);
+
             } else {
                 console.error("Errore durante la modifica del commento");
             }
@@ -254,32 +280,50 @@ const GameId = () => {
     return (
         <MainLayout>
 
+            {successMessage && (
+                <AlertMessage message={successMessage} >
+                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
+                </AlertMessage>
+            )}
+
             <div className="blog-details-root">
 
                 <div className='container'>
-                    <Image className="blog-details-cover" src={posts.game?.cover} fluid />
-                    <div className='mt-5'>
-                        <h1 className="blog-details-title">{posts.game?.title}</h1>
-                    </div>
-                    <div className='d-flex justify-content-end'>
-                        <h3>Categoria: {posts.game?.category}</h3>
-                    </div>
-                    <div className='mt-5'>
-                        <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
-                    </div>
+
+                    {isLoading ? (
+                        <div className='container d-flex justify-content-center spinner-margin'>
+                            <PacmanLoader color="#e0d100" />
+                        </div>
+                    ) : (
+                        <div>
+                            <Image className="blog-details-cover" src={posts.game?.cover} fluid />
+                            <div className='mt-5'>
+                                <h1 className="blog-details-title">{posts.game?.title}</h1>
+                            </div>
+                            <div className='d-flex justify-content-end'>
+                                <h3>Categoria: {posts.game?.category}</h3>
+                            </div>
+                            <div className='mt-5'>
+                                <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+                            </div>
+
+
+
+
+                            {/* se sei l'autore puoi modificare o eliminare il post */}
+                            {session.role === "admin" && (
+                                <div className='container d-flex justify-content-end'>
+                                    <Link to={`/modGame/${posts.game?._id}`}>
+                                        <Button variant="outline-primary">Modifica</Button>
+                                    </Link>
+                                    <Button onClick={deleteGame} variant="outline-success" className='ms-2'>Elimina</Button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                 </div>
 
-
-
-                {/* se sei l'autore puoi modificare o eliminare il post */}
-                {session.role === "admin" && (
-                    <div className='container d-flex justify-content-end'>
-                        <Link to={`/modGame/${posts.game?._id}`}>
-                            <Button variant="outline-primary">Modifica</Button>
-                        </Link>
-                        <Button onClick={deleteGame} variant="outline-success" className='ms-2'>Elimina</Button>
-                    </div>
-                )}
 
                 <hr className='my-5' />
 
@@ -333,34 +377,43 @@ const GameId = () => {
 
                 <Container>
                     <h1 className="blog-details-title mb-5">Commenti</h1>
-                    {viewComments && viewComments.comments?.map((comment) => {
 
-                        return (
-                            <div key={comment._id} className='d-flex my-4'>
-                                <img className='box-comment-img me-4'
-                                    src={`${comment.author?.avatar}`} alt="img" />
+                    {isLoadingComments ? (
+                        <div className='container d-flex justify-content-center mb-5'>
+                            <PacmanLoader color="#e0d100" />
+                        </div>
+                    ) : (
+                        <div>
+                            {viewComments && viewComments.comments?.map((comment) => {
 
-                                <Container className='box-comment d-flex justify-content-between'>
-                                    <div>
-                                        <h5>{comment.author?.firstName} {comment.author?.lastName}</h5>
-                                        <h2>{comment.title}</h2>
-                                        <p>{comment.content}</p>
+                                return (
+                                    <div key={comment._id} className='d-flex my-4'>
+                                        <img className='box-comment-img me-4'
+                                            src={`${comment.author?.avatar}`} alt="img" />
+
+                                        <Container className='box-comment d-flex justify-content-between'>
+                                            <div>
+                                                <h5>{comment.author?.firstName} {comment.author?.lastName}</h5>
+                                                <h2>{comment.title}</h2>
+                                                <p>{comment.content}</p>
+                                            </div>
+
+                                            <div>
+                                                {/* se sei l'autore puoi modificare il commento */}
+                                                {session.id === comment.author?._id && (
+                                                    <Pen onClick={() => openEditModal(comment)} color="red" size={25} role="button" />)}
+
+                                                {/* se sei l'autore o l'admin puoi eliminare il commento */}
+                                                {(session.id === comment.author?._id || session.role === "admin") && (
+                                                    <Trash3 onClick={handleDeleteClick(comment._id)} color="red" size={25} role="button" className='mx-3' />)}
+                                            </div>
+
+                                        </Container>
                                     </div>
-
-                                    <div>
-                                        {/* se sei l'autore puoi modificare il commento */}
-                                        {session.id === comment.author?._id && (
-                                            <Pen onClick={() => openEditModal(comment)} color="red" size={25} role="button" />)}
-
-                                        {/* se sei l'autore o l'admin puoi eliminare il commento */}
-                                        {(session.id === comment.author?._id || session.role === "admin") && (
-                                            <Trash3 onClick={handleDeleteClick(comment._id)} color="red" size={25} role="button" className='mx-3' />)}
-                                    </div>
-
-                                </Container>
-                            </div>
-                        )
-                    })}
+                                )
+                            })}
+                        </div>
+                    )}
                 </Container >
 
 

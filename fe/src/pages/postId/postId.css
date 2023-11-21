@@ -63,6 +63,7 @@
     border-radius: 50%;
 }
 
-.porcozio {
-    margin-top: 300px;
+.spinner-margin {
+    margin-top: 200px;
+    margin-bottom: 100px;
 }

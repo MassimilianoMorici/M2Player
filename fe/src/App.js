@@ -15,34 +15,32 @@ import CategoryGame from "./pages/categoryGame/CategoryGame";
 import CategoryPost from "./pages/categoryPost/CategoryPost";
 import Gestionale from "./pages/gestionale/Gestionale";
 import ScrollToTop from "./hooks/useScrollRestoration";
-import { LoadingProvider } from "./contexts/LoadingContext";
 
 function App() {
   return (
 
     <Router>
       <ScrollToTop />
-      <LoadingProvider>
-        <Routes>
-          <Route path="/" exact element={<Login />} />
-          <Route path="/newAccount" element={<NewAccount />} />
+      <Routes>
+        <Route path="/" exact element={<Login />} />
+        <Route path="/newAccount" element={<NewAccount />} />
 
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/newPost" element={<NewPost />} />
-            <Route path="/modPost/:id" element={<ModPost />} />
-            <Route path="/newGame" element={<NewGame />} />
-            <Route path="/modGame/:id" element={<ModGame />} />
-            <Route path="/allGame" element={<CategoryGame />} />
-            <Route path="/allPost" element={<CategoryPost />} />
-            <Route path="/post/:id" element={<PostId />} />
-            <Route path="/game/:id" element={<GameId />} />
-            <Route path="/me" element={<Account />} />
-            <Route path="/gestionale" element={<Gestionale />} />
-          </Route>
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/newPost" element={<NewPost />} />
+          <Route path="/modPost/:id" element={<ModPost />} />
+          <Route path="/newGame" element={<NewGame />} />
+          <Route path="/modGame/:id" element={<ModGame />} />
+          <Route path="/allGame" element={<CategoryGame />} />
+          <Route path="/allPost" element={<CategoryPost />} />
+          <Route path="/post/:id" element={<PostId />} />
+          <Route path="/game/:id" element={<GameId />} />
+          <Route path="/me" element={<Account />} />
+          <Route path="/gestionale" element={<Gestionale />} />
+        </Route>
 
-        </Routes>
-      </LoadingProvider>
+      </Routes>
+
     </Router>
 
   );
