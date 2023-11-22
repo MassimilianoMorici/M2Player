@@ -1015,25 +1015,28 @@ const PostId = () => {
 
     //DELETE COMMENT
     const deleteComment = async (idComment) => {
+        const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo commento?");
 
-        try {
-            const response = await client.delete(`/comment/delete/${idComment}`);
-            if (response.statusCode === 200) {
-                console.log("comment deleted successfully:");
-            } else {
-                console.error("Errore nella eliminazione del commento");
+        if (confirmDelete) {
+            try {
+                const response = await client.delete(`/comment/delete/${idComment}`);
+                if (response.statusCode === 200) {
+                    console.log("comment deleted successfully:");
+                } else {
+                    console.error("Errore nella eliminazione del commento");
+                }
+
+                setSuccessMessage("Commento eliminato con successo!");
+
+                getPosts()
+
+                setTimeout(() => {
+                    setSuccessMessage(null);
+                }, 3000);
+
+            } catch (e) {
+                console.error("Errore nella richiesta al server:", e);
             }
-
-            setSuccessMessage("Commento eliminato con successo!");
-
-            getPosts()
-
-            setTimeout(() => {
-                setSuccessMessage(null);
-            }, 3000);
-
-        } catch (e) {
-            console.error("Errore nella richiesta al server:", e);
         }
     }
 
@@ -1142,48 +1145,54 @@ const PostId = () => {
     //     }
     // };
     const deletePost = async () => {
-        setIsLoadingDelete(true)
-        setTimeout(async () => {
-            // Se ci sono commenti
-            if (viewComments.comments.length > 0) {
-                try {
-                    const responseComments = await client.delete(`/post/${id}/deleteAllComment`);
+        const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo post?");
 
-                    if (responseComments.statusCode === 200) {
-                        console.log("Eliminazione commenti del post avvenuta con successo");
+        if (confirmDelete) {
+
+
+            setIsLoadingDelete(true)
+            setTimeout(async () => {
+                // Se ci sono commenti
+                if (viewComments.comments.length > 0) {
+                    try {
+                        const responseComments = await client.delete(`/post/${id}/deleteAllComment`);
+
+                        if (responseComments.statusCode === 200) {
+                            console.log("Eliminazione commenti del post avvenuta con successo");
+                        } else {
+                            console.error("Errore durante l'eliminazione dei commenti del post", responseComments);
+                        }
+
+                    } catch (error) {
+                        console.error("Errore generico durante l'eliminazione", error);
+                    }
+                }
+
+                try {
+
+                    // Procedi con l'eliminazione del post
+                    const responsePost = await client.delete(`/post/delete/${id}`);
+
+                    if (responsePost.statusCode === 200) {
+                        console.log("Eliminazione post avvenuta con successo");
+                        setIsLoadingDelete(false)
+                        setSuccessMessage("Post eliminato con successo!");
+                        setTimeout(() => {
+                            setSuccessMessage(null);
+                            navigate('/home')
+                        }, 3000);
                     } else {
-                        console.error("Errore durante l'eliminazione dei commenti del post", responseComments);
+                        setIsLoadingDelete(false)
+                        console.error("Errore durante l'eliminazione del post", responsePost);
                     }
 
                 } catch (error) {
+                    setIsLoadingDelete(false)
                     console.error("Errore generico durante l'eliminazione", error);
                 }
-            }
-
-            try {
-
-                // Procedi con l'eliminazione del post
-                const responsePost = await client.delete(`/post/delete/${id}`);
-
-                if (responsePost.statusCode === 200) {
-                    console.log("Eliminazione post avvenuta con successo");
-                    setIsLoadingDelete(false)
-                    setSuccessMessage("Post eliminato con successo!");
-                    setTimeout(() => {
-                        setSuccessMessage(null);
-                        navigate('/home')
-                    }, 3000);
-                } else {
-                    setIsLoadingDelete(false)
-                    console.error("Errore durante l'eliminazione del post", responsePost);
-                }
-
-            } catch (error) {
-                setIsLoadingDelete(false)
-                console.error("Errore generico durante l'eliminazione", error);
-            }
-        }, 2000);
-    };
+            }, 2000);
+        };
+    }
 
 
     return (

@@ -156,25 +156,28 @@ const GameId = () => {
     //DELETE COMMENT
 
     const deleteComment = async (idComment) => {
+        const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo commento?");
 
-        try {
-            const response = await client.delete(`/comment/delete/${idComment}`);
-            if (response.statusCode === 200) {
-                console.log("comment deleted successfully:");
-            } else {
-                console.error("Errore nella eliminazione del commento");
+        if (confirmDelete) {
+            try {
+                const response = await client.delete(`/comment/delete/${idComment}`);
+                if (response.statusCode === 200) {
+                    console.log("comment deleted successfully:");
+                } else {
+                    console.error("Errore nella eliminazione del commento");
+                }
+
+                setSuccessMessage("Commento eliminato con successo!");
+
+                getPosts()
+
+                setTimeout(() => {
+                    setSuccessMessage(null);
+                }, 3000);
+
+            } catch (e) {
+                console.error("Errore nella richiesta al server:", e);
             }
-
-            setSuccessMessage("Commento eliminato con successo!");
-
-            getPosts()
-
-            setTimeout(() => {
-                setSuccessMessage(null);
-            }, 3000);
-
-        } catch (e) {
-            console.error("Errore nella richiesta al server:", e);
         }
     }
 
@@ -285,51 +288,55 @@ const GameId = () => {
     //     }
     // };
     const deleteGame = async () => {
+        const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo game?");
 
-        setIsLoadingDelete(true)
+        if (confirmDelete) {
 
-        setTimeout(async () => {
-            // Se ci sono commenti
-            if (viewComments.comments.length > 0) {
+            setIsLoadingDelete(true)
+
+            setTimeout(async () => {
+                // Se ci sono commenti
+                if (viewComments.comments.length > 0) {
+                    try {
+                        const responseComments = await client.delete(`/game/${id}/deleteAllComment`);
+
+                        if (responseComments.statusCode === 200) {
+                            console.log("Eliminazione commenti del game avvenuta con successo");
+                        } else {
+                            console.error("Errore durante l'eliminazione dei commenti del game", responseComments);
+                        }
+
+                    } catch (error) {
+                        console.error("Errore generico durante l'eliminazione", error);
+                    }
+                }
+
                 try {
-                    const responseComments = await client.delete(`/game/${id}/deleteAllComment`);
 
-                    if (responseComments.statusCode === 200) {
-                        console.log("Eliminazione commenti del game avvenuta con successo");
+                    // Procedi con l'eliminazione del game
+                    const responseGame = await client.delete(`/game/delete/${id}`);
+
+                    if (responseGame.statusCode === 200) {
+                        console.log("Eliminazione game avvenuta con successo");
+                        setIsLoadingDelete(false)
+                        setSuccessMessage("Game eliminato con successo!");
+                        setTimeout(() => {
+                            setSuccessMessage(null);
+                            navigate('/home')
+                        }, 3000);
+
                     } else {
-                        console.error("Errore durante l'eliminazione dei commenti del game", responseComments);
+                        setIsLoadingDelete(false)
+                        console.error("Errore durante l'eliminazione del game", responseGame);
                     }
 
                 } catch (error) {
+                    setIsLoadingDelete(false)
                     console.error("Errore generico durante l'eliminazione", error);
                 }
-            }
-
-            try {
-
-                // Procedi con l'eliminazione del game
-                const responseGame = await client.delete(`/game/delete/${id}`);
-
-                if (responseGame.statusCode === 200) {
-                    console.log("Eliminazione game avvenuta con successo");
-                    setIsLoadingDelete(false)
-                    setSuccessMessage("Game eliminato con successo!");
-                    setTimeout(() => {
-                        setSuccessMessage(null);
-                        navigate('/home')
-                    }, 3000);
-
-                } else {
-                    setIsLoadingDelete(false)
-                    console.error("Errore durante l'eliminazione del game", responseGame);
-                }
-
-            } catch (error) {
-                setIsLoadingDelete(false)
-                console.error("Errore generico durante l'eliminazione", error);
-            }
-        }, 2000);
-    };
+            }, 2000);
+        };
+    }
 
 
 

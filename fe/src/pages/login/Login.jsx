@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
+import AlertMessage from '../../components/alertMessage/AlertMessage';
+import { CheckCircleFill } from 'react-bootstrap-icons';
+import { PacmanLoader } from 'react-spinners'
 import "./login.css";
 
 
@@ -10,6 +13,8 @@ const Login = () => {
     const [loginData, setLoginData] = useState({})
     const [login, setLogin] = useState(null)
     const navigate = useNavigate()
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const handleInputChange = (e) => {
@@ -22,36 +27,63 @@ const Login = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault()
-        try {
-            const response =
-                await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/login`, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    method: "POST",
-                    body: JSON.stringify(loginData)
-                })
 
-            const data = await response.json()
+        setIsLoading(true)
+        setTimeout(async () => {
+            try {
+                const response =
+                    await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/login`, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        method: "POST",
+                        body: JSON.stringify(loginData)
+                    })
+
+                const data = await response.json()
 
 
-            if (data.token) {
-                localStorage.setItem('loggedInUser', JSON.stringify(data.token))
+                if (data.token) {
+                    localStorage.setItem('loggedInUser', JSON.stringify(data.token))
+                }
+                setLogin(data)
+
+                if (response.status === 200) {
+                    setIsLoading(false)
+                    setSuccessMessage("Login effettuato con successo!");
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                        navigate(`/home`)
+                    }, 3000);
+                } else {
+                    setIsLoading(false)
+                    console.error("Errore nel login")
+                }
+            } catch (e) {
+                setIsLoading(false)
+                console.log(e, "Errore nell'invio dei dati");
             }
-
-
-            setLogin(data)
-            navigate('/home')
-
-        } catch (e) {
-            console.log(e, "Errore nell'invio dei dati");
-        }
+        }, 2000)
     }
 
 
 
     return (
         <MainLayout>
+
+            {successMessage && (
+                <AlertMessage message={successMessage} >
+                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
+                </AlertMessage>
+            )}
+
+            {isLoading && (
+                <div className='alert-container'>
+                    <PacmanLoader size={50} color="#e0d100" />
+                </div>
+            )}
+
+
             <Container className="new-blog-container login" >
                 <Form onSubmit={onSubmit}>
                     <Form.Group controlId="author-form" className="mt-3">
