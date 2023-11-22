@@ -6,7 +6,7 @@ import "./postList.css";
 import PostItem from "../postItem/PostItem";
 import useSession from "../../../hooks/useSession";
 import { Container } from "react-bootstrap";
-
+import { PacmanLoader } from 'react-spinners'
 const client = new AxiosClient()
 
 const PostList = () => {
@@ -18,11 +18,14 @@ const PostList = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [posts, setPosts] = useState([])
     const [searchTerm, setSearchTerm] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const getPosts = async () => {
         try {
+            setIsLoading(true)
             const response = await client.get(`/posts/byTitle?title=${searchTerm}&page=${currentPage}`);
             setPosts(response);
+            setIsLoading(false)
         } catch (e) {
             console.log(e);
         }
@@ -63,24 +66,31 @@ const PostList = () => {
                     />
                 </div>
                 <div className="d-flex flex-wrap justify-content-evenly">
-                    {posts &&
-                        posts.posts?.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase())
-                        ).map((post) => {
-
-                            return (
-                                <PostItem key={post._id}
-                                    _id={post._id}
-                                    title={post.title}
-                                    game={post.game}
-                                    category={post.category}
-                                    img={post.img}
-                                    authorNome={post.author?.firstName}
-                                    authorCognome={post.author?.lastName}
-                                    authorAvatar={post.author?.avatar}
-                                    content={post.content}
-                                />
-                            )
-                        })}
+                    {isLoading ? (
+                        <div className='container d-flex justify-content-center spinner-margin'>
+                            <PacmanLoader color="#e0d100" />
+                        </div>
+                    ) : (
+                        <>
+                            {posts &&
+                                posts.posts?.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                ).map((post) => {
+                                    return (
+                                        <PostItem key={post._id}
+                                            _id={post._id}
+                                            title={post.title}
+                                            game={post.game}
+                                            category={post.category}
+                                            img={post.img}
+                                            authorNome={post.author?.firstName}
+                                            authorCognome={post.author?.lastName}
+                                            authorAvatar={post.author?.avatar}
+                                            content={post.content}
+                                        />
+                                    )
+                                })}
+                        </>
+                    )}
                 </div>
                 <div className="mb-5">
                     <ResponsivePagination

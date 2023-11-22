@@ -3,18 +3,25 @@ import MainLayout from "../../layouts/MainLayout";
 import AxiosClient from "../../client/client";
 import "./gestionale.css"
 import { Link } from "react-router-dom";
-import { CaretDownFill, CaretRightFill, Trash3 } from "react-bootstrap-icons";
-
+import { CaretDownFill, CaretRightFill, Trash3, CheckCircleFill } from "react-bootstrap-icons";
+import AlertMessage from '../../components/alertMessage/AlertMessage';
+import { PacmanLoader } from 'react-spinners'
 
 const client = new AxiosClient()
 
 
 const Gestionale = () => {
 
+    const [successMessage, setSuccessMessage] = useState(null);
 
     const [games, setGames] = useState([])
     const [posts, setPosts] = useState([])
     const [accounts, setAccounts] = useState([])
+
+    const [isLoadingGames, setIsLoadingGames] = useState(false);
+    const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+    const [isLoadingAccounts, setIsLoadingAccounts] = useState(false);
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
     const [showGames, setShowGames] = useState(false)
     const [showPosts, setShowPosts] = useState(false)
@@ -42,8 +49,10 @@ const Gestionale = () => {
     // GET GAME
     const getGames = async () => {
         try {
+            setIsLoadingGames(true)
             const response = await client.get('/games')
             setGames(response)
+            setIsLoadingGames(false)
         } catch (error) {
             console.log(error);
         }
@@ -52,8 +61,10 @@ const Gestionale = () => {
     // GET POST
     const getPosts = async () => {
         try {
+            setIsLoadingPosts(true)
             const response = await client.get('/posts')
             setPosts(response)
+            setIsLoadingPosts(false)
         } catch (error) {
             console.log(error);
         }
@@ -62,8 +73,10 @@ const Gestionale = () => {
     // GET ACCOUNT
     const getAccounts = async () => {
         try {
+            setIsLoadingAccounts(true)
             const response = await client.get('/accounts')
             setAccounts(response)
+            setIsLoadingAccounts(false)
         } catch (error) {
             console.log(error);
         }
@@ -77,19 +90,57 @@ const Gestionale = () => {
     }, [])
 
 
+    // const deleteAccount = async (idAccount) => {
+    //     setIsLoadingDelete(true)
+    //     try {
+    //         const response = await client.delete(`account/delete/${idAccount}`)
+    //         if (response.statusCode === 200) {
+    //             console.log("Eliminazione account avvenuta con successo");
+    //             setIsLoadingDelete(false)
+    //             setSuccessMessage("Account eliminato con successo!");
+    //             getAccounts()
+    //             setTimeout(() => {
+    //                 setSuccessMessage(null);
+    //             }, 3000);
+
+    //         } else {
+    //             setIsLoadingDelete(false)
+    //             console.error("Errore durante l'eliminazione dell'account", response);
+    //         }
+
+    //     } catch (error) {
+    //         setIsLoadingDelete(false)
+    //         console.log(error);
+    //     }
+    // }
     const deleteAccount = async (idAccount) => {
-        try {
-            const response = await client.delete(`account/delete/${idAccount}`)
-            if (response.statusCode === 200) {
-                console.log("Eliminazione account avvenuta con successo");
-                getAccounts()
-            } else {
-                console.error("Errore durante l'eliminazione dell'account", response);
+        setIsLoadingDelete(true); // Mostra il loading
+
+        setTimeout(async () => {
+            try {
+                const response = await client.delete(`account/delete/${idAccount}`);
+
+                if (response.statusCode === 200) {
+                    console.log("Eliminazione account avvenuta con successo");
+                    setIsLoadingDelete(false)
+                    setSuccessMessage("Account eliminato con successo!");
+                    getAccounts();
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                    }, 3000);
+                } else {
+                    console.error("Errore durante l'eliminazione dell'account", response);
+                    setIsLoadingDelete(false); // Nasconde il loading in caso di errore
+                }
+            } catch (error) {
+                console.log(error);
+                setIsLoadingDelete(false); // Nasconde il loading in caso di eccezione
             }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+        }, 2000); // Mostra il loading per 2 secondi prima di eseguire la chiamata
+    };
+
+
+
 
 
     const handleDeleteClick = (accountId) => {
@@ -105,9 +156,20 @@ const Gestionale = () => {
 
     return (
         <MainLayout>
+
+            {successMessage && (
+                <AlertMessage message={successMessage} >
+                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
+                </AlertMessage>
+            )}
+
+            {isLoadingDelete && (
+                <div className='alert-container'>
+                    <PacmanLoader size={50} color="#e0d100" />
+                </div>
+            )}
+
             <div className="pGestionale-main">
-
-
 
                 {/* LISTA GAME */}
                 <div className="container">
@@ -119,19 +181,27 @@ const Gestionale = () => {
                             {gamesIcon}
                         </div>
                     </div>
-                    {showGames && games && games.games?.map((game) => {
-                        return (
-                            <Link
-                                key={game._id}
-                                to={`/game/${game._id}`}
-                                className='d-flex align-items-center my-4 p-account-box-singlePost'>
-                                <div>
-                                    <img className="img-postmap me-3" src={`${game.cover}`} alt="" />
-                                </div>
-                                <h2>{game.title}</h2>
-                            </Link>
-                        )
-                    })}
+                    {showGames && isLoadingGames ? (
+                        <div className='container d-flex justify-content-center spinner-margin'>
+                            <PacmanLoader color="#e0d100" />
+                        </div>
+                    ) : (
+                        <>
+                            {showGames && games && games.games?.map((game) => {
+                                return (
+                                    <Link
+                                        key={game._id}
+                                        to={`/game/${game._id}`}
+                                        className='d-flex align-items-center my-4 p-account-box-singlePost'>
+                                        <div>
+                                            <img className="img-postmap me-3" src={`${game.cover}`} alt="" />
+                                        </div>
+                                        <h2>{game.title}</h2>
+                                    </Link>
+                                )
+                            })}
+                        </>
+                    )}
                 </div>
 
                 <hr className="my-5" />
@@ -147,19 +217,27 @@ const Gestionale = () => {
                         </div>
                     </div>
 
-                    {showPosts && posts && posts.posts?.map((post) => {
-                        return (
-                            <Link
-                                key={post._id}
-                                to={`/post/${post._id}`}
-                                className='d-flex align-items-center my-4 p-account-box-singlePost'>
-                                <div>
-                                    <img className="img-postmap me-3" src={`${post.img}`} alt="" />
-                                </div>
-                                <h2>{post.title}</h2>
-                            </Link>
-                        )
-                    })}
+                    {showPosts && isLoadingPosts ? (
+                        <div className='container d-flex justify-content-center spinner-margin'>
+                            <PacmanLoader color="#e0d100" />
+                        </div>
+                    ) : (
+                        <>
+                            {showPosts && posts && posts.posts?.map((post) => {
+                                return (
+                                    <Link
+                                        key={post._id}
+                                        to={`/post/${post._id}`}
+                                        className='d-flex align-items-center my-4 p-account-box-singlePost'>
+                                        <div>
+                                            <img className="img-postmap me-3" src={`${post.img}`} alt="" />
+                                        </div>
+                                        <h2>{post.title}</h2>
+                                    </Link>
+                                )
+                            })}
+                        </>
+                    )}
                 </div>
 
                 <hr className="my-5" />
@@ -175,24 +253,32 @@ const Gestionale = () => {
                         </div>
                     </div>
 
-                    {showAccounts && accounts && accounts.accounts?.map((account) => {
-                        return (
-                            <div
-                                key={account._id}
-                                className='d-flex justify-content-between align-items-center my-4 p-account-box-singlePost'>
-                                <div className="d-flex">
-                                    <div>
-                                        <img className="img-postmap me-3" src={`${account.avatar}`} alt="" />
+                    {showAccounts && isLoadingAccounts ? (
+                        <div className='container d-flex justify-content-center spinner-margin'>
+                            <PacmanLoader color="#e0d100" />
+                        </div>
+                    ) : (
+                        <>
+                            {showAccounts && accounts && accounts.accounts?.map((account) => {
+                                return (
+                                    <div
+                                        key={account._id}
+                                        className='d-flex justify-content-between align-items-center my-4 p-account-box-singlePost'>
+                                        <div className="d-flex">
+                                            <div>
+                                                <img className="img-postmap me-3" src={`${account.avatar}`} alt="" />
+                                            </div>
+                                            <h2>{account.email}</h2>
+                                        </div>
+                                        {/* si possono eliminare solo gli account user */}
+                                        {account.role === "user" &&
+                                            <Trash3 onClick={handleDeleteClick(account._id)} color="red" size={25} role="button" className='mx-3' />
+                                        }
                                     </div>
-                                    <h2>{account.email}</h2>
-                                </div>
-                                {/* si possono eliminare solo gli account user */}
-                                {account.role === "user" &&
-                                    <Trash3 onClick={handleDeleteClick(account._id)} color="red" size={25} role="button" className='mx-3' />
-                                }
-                            </div>
-                        )
-                    })}
+                                )
+                            })}
+                        </>
+                    )}
                 </div>
 
             </div>

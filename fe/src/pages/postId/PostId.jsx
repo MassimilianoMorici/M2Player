@@ -881,6 +881,7 @@ const PostId = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingComments, setIsLoadingComments] = useState(false);
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
     const session = useSession()
     const client = new AxiosClient()
@@ -1102,38 +1103,86 @@ const PostId = () => {
 
 
     //DELETE del post con controllo ed eliminazione dei commenti relativi
+    // const deletePost = async () => {
+    //     setIsLoadingDelete(true)
+    //     // Se ci sono commenti
+    //     if (viewComments.comments.length > 0) {
+    //         try {
+    //             const responseComments = await client.delete(`/post/${id}/deleteAllComment`);
+
+    //             if (responseComments.statusCode === 200) {
+    //                 console.log("Eliminazione commenti del post avvenuta con successo");
+    //             } else {
+    //                 console.error("Errore durante l'eliminazione dei commenti del post", responseComments);
+    //             }
+
+    //         } catch (error) {
+    //             console.error("Errore generico durante l'eliminazione", error);
+    //         }
+    //     }
+
+    //     try {
+
+    //         // Procedi con l'eliminazione del post
+    //         const responsePost = await client.delete(`/post/delete/${id}`);
+
+    //         if (responsePost.statusCode === 200) {
+    //             console.log("Eliminazione post avvenuta con successo");
+    //             setSuccessMessage("Post eliminato con successo!");
+    //             setTimeout(() => {
+    //                 setSuccessMessage(null);
+    //                 navigate('/home')
+    //             }, 3000);
+    //         } else {
+    //             console.error("Errore durante l'eliminazione del post", responsePost);
+    //         }
+    //         setIsLoadingDelete(false)
+    //     } catch (error) {
+    //         console.error("Errore generico durante l'eliminazione", error);
+    //     }
+    // };
     const deletePost = async () => {
+        setIsLoadingDelete(true)
+        setTimeout(async () => {
+            // Se ci sono commenti
+            if (viewComments.comments.length > 0) {
+                try {
+                    const responseComments = await client.delete(`/post/${id}/deleteAllComment`);
 
-        // Se ci sono commenti
-        if (viewComments.comments.length > 0) {
+                    if (responseComments.statusCode === 200) {
+                        console.log("Eliminazione commenti del post avvenuta con successo");
+                    } else {
+                        console.error("Errore durante l'eliminazione dei commenti del post", responseComments);
+                    }
+
+                } catch (error) {
+                    console.error("Errore generico durante l'eliminazione", error);
+                }
+            }
+
             try {
-                const responseComments = await client.delete(`/post/${id}/deleteAllComment`);
 
-                if (responseComments.statusCode === 200) {
-                    console.log("Eliminazione commenti del post avvenuta con successo");
+                // Procedi con l'eliminazione del post
+                const responsePost = await client.delete(`/post/delete/${id}`);
+
+                if (responsePost.statusCode === 200) {
+                    console.log("Eliminazione post avvenuta con successo");
+                    setIsLoadingDelete(false)
+                    setSuccessMessage("Post eliminato con successo!");
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                        navigate('/home')
+                    }, 3000);
                 } else {
-                    console.error("Errore durante l'eliminazione dei commenti del post", responseComments);
+                    setIsLoadingDelete(false)
+                    console.error("Errore durante l'eliminazione del post", responsePost);
                 }
 
             } catch (error) {
+                setIsLoadingDelete(false)
                 console.error("Errore generico durante l'eliminazione", error);
             }
-        }
-
-        try {
-
-            // Procedi con l'eliminazione del post
-            const responsePost = await client.delete(`/post/delete/${id}`);
-
-            if (responsePost.statusCode === 200) {
-                navigate('/home');
-                console.log("Eliminazione post avvenuta con successo");
-            } else {
-                console.error("Errore durante l'eliminazione del post", responsePost);
-            }
-        } catch (error) {
-            console.error("Errore generico durante l'eliminazione", error);
-        }
+        }, 2000);
     };
 
 
@@ -1145,6 +1194,12 @@ const PostId = () => {
                 <AlertMessage message={successMessage} >
                     <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
                 </AlertMessage>
+            )}
+
+            {isLoadingDelete && (
+                <div className='alert-container'>
+                    <PacmanLoader size={50} color="#e0d100" />
+                </div>
             )}
 
             <div className="blog-details-root">
@@ -1174,15 +1229,18 @@ const PostId = () => {
                                 <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
                             </div>
 
-                            {/* se sei l'autore puoi modificare o eliminare il post */}
-                            {session.id === posts.post?.author._id && (
-                                <div className='container d-flex justify-content-end'>
+                            <div className='container d-flex justify-content-end'>
+                                {/* se sei l'autore puoi modificare il post */}
+                                {session.id === posts.post?.author._id && (
                                     <Link to={`/modPost/${posts.post?._id}`}>
                                         <Button variant="outline-primary">Modifica</Button>
-                                    </Link>
+                                    </Link>)}
+
+                                {/* se sei l'autore o l'admin puoi eliminare il post */}
+                                {(session.id === posts.post?.author._id || session.role === "admin") && (
                                     <Button onClick={deletePost} variant="outline-success" className='ms-2'>Elimina</Button>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>

@@ -305,7 +305,21 @@ const NewPost = () => {
                 const responseData = await response.json();
 
                 if (response.status === 201) {
-                    console.log("Post created successfully:", responseData.payload);
+                    console.log("Post creato con successo: ", responseData.payload);
+                    setFormData({
+                        author: session.id,
+                        game: "",
+                        title: "",
+                        content: "",
+                        img: null,
+                        category: "Gameplay",
+                    })
+
+                    setSuccessMessage("Post creato con successo!");
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                        navigate('/home')
+                    }, 3000);
                 } else {
                     console.error("Errore nella creazione del post");
                 }
@@ -321,27 +335,14 @@ const NewPost = () => {
                 // });
                 // console.log(emailResponse);
 
-                setFormData({
-                    author: session.id,
-                    game: "",
-                    title: "",
-                    content: "",
-                    img: null,
-                    category: "Gameplay",
-                })
-
-                setSuccessMessage("Post creato con successo!");
-                setTimeout(() => {
-                    setSuccessMessage(null);
-                    navigate('/home')
-                }, 3000);
 
 
+                setIsLoading(false)
             } catch (e) {
                 console.error("Errore nella richiesta al server:", e);
             }
 
-            setIsLoading(false)
+
         }
     };
 

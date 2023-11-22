@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import useSession from "../../hooks/useSession";
 import MainLayout from "../../layouts/MainLayout";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import "./newGame.css";
 import "./_textEditor.scss"
-
+import AlertMessage from '../../components/alertMessage/AlertMessage';
+import { CheckCircleFill } from 'react-bootstrap-icons';
+import { PacmanLoader } from 'react-spinners'
+import { useNavigate } from "react-router-dom";
 
 
 
 const NewGame = () => {
 
-    const session = useSession()
+
+    const navigate = useNavigate()
+
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -65,6 +71,8 @@ const NewGame = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
+        setIsLoading(true)
+
         if (file) {
 
             const rate = parseFloat(formData.rate);
@@ -90,10 +98,23 @@ const NewGame = () => {
 
                 const responseData = await response.json();
 
-                if (response.statusCode === 201) {
-                    console.log("Blog post created successfully:", responseData.payload);
+                if (response.status === 201) {
+                    console.log("Game creato con successo: ", responseData.payload);
+                    setFormData({
+                        title: "",
+                        editor: "",
+                        platform: "",
+                        category: "MMORPG",
+                        rate: "",
+                        cover: null,
+                    })
+                    setSuccessMessage("Game creato con successo!");
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                        navigate('/home')
+                    }, 3000);
                 } else {
-                    console.error("Errore nella creazione del blog post");
+                    console.error("Errore nella creazione del game");
                 }
 
                 // const emailResponse = await client.post("/send-email", {
@@ -107,9 +128,16 @@ const NewGame = () => {
                 // });
                 // console.log(emailResponse);
 
+
+
+
+
+                setIsLoading(false)
             } catch (e) {
                 console.error("Errore nella richiesta al server:", e);
             }
+
+
         }
     };
 
@@ -118,6 +146,20 @@ const NewGame = () => {
 
     return (
         <MainLayout>
+
+
+            {successMessage && (
+                <AlertMessage message={successMessage} >
+                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
+                </AlertMessage>
+            )}
+
+            {isLoading && (
+                <div className='alert-container'>
+                    <PacmanLoader size={50} color="#e0d100" />
+                </div>
+            )}
+
 
             <Container className="new-blog-container asd">
                 <h1 className="mb-4">Aggiungi Gioco</h1>
