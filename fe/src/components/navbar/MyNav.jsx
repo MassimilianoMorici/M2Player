@@ -173,6 +173,8 @@ import { Dropdown, NavDropdown, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import logoM2 from "../../assets/m2playerLogo.png"
+import gameM2 from "../../assets/m2playerGAME.png"
+import postM2 from "../../assets/m2playerPOST.png"
 
 import useSession from "../../hooks/useSession";
 
@@ -201,11 +203,17 @@ const MyNav = () => {
                         </Navbar.Brand>
                     </div>
 
-                    <div>
-                        <ul className="d-flex tag-ul d-none d-md-flex d-xxl-flex">
+                    <div className="d-flex tag-ul d-none d-md-flex d-xxl-flex">
+                        <a href="/allGame">
+                            <img className="game_post_link ms-mod-nav" alt="logo" src={gameM2} />
+                        </a>
+                        <a href="/allPost">
+                            <img className="game_post_link ms-5" alt="logo" src={postM2} />
+                        </a>
+                        {/* <ul className="d-flex tag-ul d-none d-md-flex d-xxl-flex">
                             <li className="mx-3"><a className="nav-a" href="/allGame">Game</a></li>
                             <li className="mx-3 "><a className="nav-a" href="/allPost">Post</a></li>
-                        </ul>
+                        </ul> */}
                     </div>
                 </div>
                 {/* <div>

@@ -3,6 +3,7 @@
     height: 250px;
     object-fit: cover;
     object-position: 0% 0%;
+
 }
 
 .blog-card {
@@ -11,6 +12,8 @@
     margin-right: 30px;
     margin-left: 30px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.493);
+    border: solid black 4px !important;
+    border-radius: 10px !important;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 

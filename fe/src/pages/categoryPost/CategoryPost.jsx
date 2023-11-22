@@ -41,44 +41,45 @@ const CategoryPost = () => {
         <MainLayout>
 
             <div className="my-custom-container pCategory-marginTop">
+                <div className="container component-bg">
+                    <div className="container">
+                        <label className="mb-2 fs-4 fw-bold">Categoria</label>
+                        <select
+                            id="blog-category"
+                            name="category"
+                            className="form-control form-control-lg"
+                            onChange={handleInputChange}
+                        >
+                            <option value="TUTTI">TUTTI</option>
+                            <option value="Easter Egg">Easter Egg</option>
+                            <option value="Gameplay">Gameplay</option>
+                            <option value="Guide">Guide</option>
+                            <option value="Nuove uscite">Nuove uscite</option>
+                            <option value="Party">Party</option>
+                            <option value="Preordini">Preordini</option>
+                            <option value="Segreti">Segreti</option>
+                            <option value="Tutorial">Tutorial</option>
+                        </select>
+                    </div>
 
-                <div className="container">
-                    <label className="mb-2">Categoria</label>
-                    <select
-                        id="blog-category"
-                        name="category"
-                        className="form-control form-control-lg"
-                        onChange={handleInputChange}
-                    >
-                        <option value="TUTTI">TUTTI</option>
-                        <option value="Easter Egg">Easter Egg</option>
-                        <option value="Gameplay">Gameplay</option>
-                        <option value="Guide">Guide</option>
-                        <option value="Nuove uscite">Nuove uscite</option>
-                        <option value="Party">Party</option>
-                        <option value="Preordini">Preordini</option>
-                        <option value="Segreti">Segreti</option>
-                        <option value="Tutorial">Tutorial</option>
-                    </select>
-                </div>
-
-                <div className="d-flex flex-wrap justify-content-evenly mt-2">
-                    {posts &&
-                        posts.posts?.map((post) => {
-                            return (
-                                <PostItem key={post._id}
-                                    _id={post._id}
-                                    title={post.title}
-                                    game={post.game}
-                                    category={post.category}
-                                    img={post.img}
-                                    authorNome={post.author?.firstName}
-                                    authorCognome={post.author?.lastName}
-                                    authorAvatar={post.author?.avatar}
-                                    content={post.content}
-                                />
-                            )
-                        })}
+                    <div className="d-flex flex-wrap justify-content-evenly mt-2">
+                        {posts &&
+                            posts.posts?.map((post) => {
+                                return (
+                                    <PostItem key={post._id}
+                                        _id={post._id}
+                                        title={post.title}
+                                        game={post.game}
+                                        category={post.category}
+                                        img={post.img}
+                                        authorNome={post.author?.firstName}
+                                        authorCognome={post.author?.lastName}
+                                        authorAvatar={post.author?.avatar}
+                                        content={post.content}
+                                    />
+                                )
+                            })}
+                    </div>
                 </div>
             </div >
         </MainLayout>

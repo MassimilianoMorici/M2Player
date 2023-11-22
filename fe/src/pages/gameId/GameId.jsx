@@ -355,169 +355,166 @@ const GameId = () => {
                 </div>
             )}
 
-            <div className="blog-details-root">
 
-                <div className='container'>
+            <div className='container component-bg m-t-IdPage'>
 
-                    {isLoading ? (
-                        <div className='container d-flex justify-content-center spinner-margin'>
-                            <PacmanLoader color="#e0d100" />
+                {isLoading ? (
+                    <div className='container d-flex justify-content-center spinner-margin'>
+                        <PacmanLoader color="#e0d100" />
+                    </div>
+                ) : (
+                    <div>
+                        <Image className="img-Idpage" src={posts.game?.cover} fluid />
+                        <div className='mt-5'>
+                            <h1 className="fw-bold">{posts.game?.title}</h1>
                         </div>
-                    ) : (
-                        <div>
-                            <Image className="blog-details-cover" src={posts.game?.cover} fluid />
-                            <div className='mt-5'>
-                                <h1 className="blog-details-title">{posts.game?.title}</h1>
+                        <div className='d-flex justify-content-end'>
+                            <h3>Categoria: {posts.game?.category}</h3>
+                        </div>
+                        <div className='mt-5'>
+                            <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+                        </div>
+
+                        {/* se sei l'autore puoi modificare o eliminare il post */}
+                        {session.role === "admin" && (
+                            <div className='container d-flex justify-content-end'>
+                                <Link to={`/modGame/${posts.game?._id}`}>
+                                    <Button variant="outline-primary">Modifica</Button>
+                                </Link>
+                                <Button onClick={deleteGame} variant="outline-success" className='ms-2'>Elimina</Button>
                             </div>
-                            <div className='d-flex justify-content-end'>
-                                <h3>Categoria: {posts.game?.category}</h3>
-                            </div>
-                            <div className='mt-5'>
-                                <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
-                            </div>
+                        )}
+                    </div>
+                )}
+
+            </div>
+
+
+            <Container className='component-bg'>
+                <h1 className="fw-bold mb-5">Aggiungi commento</h1>
+                <Form onSubmit={onSubmit}>
+                    <Form.Group controlId="blog-form" className="mt-3">
+                        <Form.Label className='fw-bold'>Titolo</Form.Label>
+                        <Form.Control
+                            required
+                            size="lg"
+                            name="title"
+                            value={newComment.title}
+                            onChange={handleInputChange}
+                            placeholder="Titolo"
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="blog-content" className="mt-3">
+                        <Form.Label className='fw-bold'>Post</Form.Label>
+                        <Form.Control
+                            required
+                            as="textarea"
+                            size="lg"
+                            name="content"
+                            value={newComment.content}
+                            onChange={handleInputChange}
+                            placeholder="Scrivi il tuo post..."
+                            style={{ minHeight: '100px' }}
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="d-flex mt-3 justify-content-end">
+                        <Button type="reset" size="lg" variant="outline-dark">
+                            Reset
+                        </Button>
+                        <Button
+                            type="submit"
+                            size="lg"
+                            variant="dark"
+                            style={{
+                                marginLeft: "1em",
+                            }}
+                        >
+                            Submit
+                        </Button>
+                    </Form.Group>
+                </Form>
+
+            </Container>
+
+
+            <Container className='component-bg'>
+                <h1 className="fw-bold mb-5">Commenti</h1>
+
+                {isLoadingComments ? (
+                    <div className='container d-flex justify-content-center mb-5'>
+                        <PacmanLoader color="#e0d100" />
+                    </div>
+                ) : (
+                    <div>
+                        {viewComments && viewComments.comments?.map((comment) => {
+
+                            return (
+                                <div key={comment._id} className='d-flex my-4'>
+                                    <div className='box-comment-img me-2'>
+                                        <img src={`${comment.author?.avatar}`} alt="img" />
+                                    </div>
+                                    <Container className='box-comment'>
+                                        <div>
+                                            <div className='d-flex justify-content-between align-items-center'>
+                                                <h5>{comment.author?.firstName} {comment.author?.lastName}</h5>
+                                                <div>
+                                                    {/* se sei l'autore puoi modificare il commento */}
+                                                    {session.id === comment.author?._id && (
+                                                        <Pen onClick={() => openEditModal(comment)} color="red" size={25} role="button" />)}
+
+                                                    {/* se sei l'autore o l'admin puoi eliminare il commento */}
+                                                    {(session.id === comment.author?._id || session.role === "admin") && (
+                                                        <Trash3 onClick={handleDeleteClick(comment._id)} color="red" size={25} role="button" className='mx-3' />)}
+                                                </div>
+                                            </div>
+                                            <h2>{comment.title}</h2>
+                                            <p>{comment.content}</p>
+                                        </div>
 
 
 
-
-                            {/* se sei l'autore puoi modificare o eliminare il post */}
-                            {session.role === "admin" && (
-                                <div className='container d-flex justify-content-end'>
-                                    <Link to={`/modGame/${posts.game?._id}`}>
-                                        <Button variant="outline-primary">Modifica</Button>
-                                    </Link>
-                                    <Button onClick={deleteGame} variant="outline-success" className='ms-2'>Elimina</Button>
+                                    </Container>
                                 </div>
-                            )}
-                        </div>
-                    )}
+                            )
+                        })}
+                    </div>
+                )}
+            </Container >
 
-                </div>
 
 
-                <hr className='my-5' />
-
-                <Container>
-                    <h1 className="blog-details-title mb-5">Aggiungi commento</h1>
-                    <Form onSubmit={onSubmit}>
-                        <Form.Group controlId="blog-form" className="mt-3">
-                            <Form.Label>Titolo</Form.Label>
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modifica Commento</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleEditComment}>
+                        <Form.Group controlId="editRate">
+                            <Form.Label className='ms-2'>Titolo</Form.Label>
                             <Form.Control
-                                size="lg"
+                                type="text"
                                 name="title"
-                                value={newComment.title}
-                                onChange={handleInputChange}
-                                placeholder="Titolo"
+                                value={editComment.title}
+                                onChange={handleModComment}
+                                required
                             />
                         </Form.Group>
-                        <Form.Group controlId="blog-content" className="mt-3">
-                            <Form.Label>Post</Form.Label>
+                        <Form.Group controlId="editComment">
+                            <Form.Label className='mt-3 ms-2'>Post</Form.Label>
                             <Form.Control
                                 as="textarea"
-                                size="lg"
                                 name="content"
-                                value={newComment.content}
-                                onChange={handleInputChange}
-                                placeholder="Scrivi il tuo post..."
-                                style={{ minHeight: '100px' }}
+                                value={editComment.content}
+                                onChange={handleModComment}
+                                required
                             />
                         </Form.Group>
-
-                        <Form.Group className="d-flex mt-3 justify-content-end">
-                            <Button type="reset" size="lg" variant="outline-dark">
-                                Reset
-                            </Button>
-                            <Button
-                                type="submit"
-                                size="lg"
-                                variant="dark"
-                                style={{
-                                    marginLeft: "1em",
-                                }}
-                            >
-                                Submit
-                            </Button>
-                        </Form.Group>
+                        <Button className='mt-3' type="submit">Salva Modifiche</Button>
                     </Form>
+                </Modal.Body>
+            </Modal>
 
-                </Container>
-
-
-                <hr className='my-5' />
-
-                <Container>
-                    <h1 className="blog-details-title mb-5">Commenti</h1>
-
-                    {isLoadingComments ? (
-                        <div className='container d-flex justify-content-center mb-5'>
-                            <PacmanLoader color="#e0d100" />
-                        </div>
-                    ) : (
-                        <div>
-                            {viewComments && viewComments.comments?.map((comment) => {
-
-                                return (
-                                    <div key={comment._id} className='d-flex my-4'>
-                                        <img className='box-comment-img me-4'
-                                            src={`${comment.author?.avatar}`} alt="img" />
-
-                                        <Container className='box-comment d-flex justify-content-between'>
-                                            <div>
-                                                <h5>{comment.author?.firstName} {comment.author?.lastName}</h5>
-                                                <h2>{comment.title}</h2>
-                                                <p>{comment.content}</p>
-                                            </div>
-
-                                            <div>
-                                                {/* se sei l'autore puoi modificare il commento */}
-                                                {session.id === comment.author?._id && (
-                                                    <Pen onClick={() => openEditModal(comment)} color="red" size={25} role="button" />)}
-
-                                                {/* se sei l'autore o l'admin puoi eliminare il commento */}
-                                                {(session.id === comment.author?._id || session.role === "admin") && (
-                                                    <Trash3 onClick={handleDeleteClick(comment._id)} color="red" size={25} role="button" className='mx-3' />)}
-                                            </div>
-
-                                        </Container>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    )}
-                </Container >
-
-
-
-                <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Modifica Commento</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form onSubmit={handleEditComment}>
-                            <Form.Group controlId="editRate">
-                                <Form.Label className='ms-2'>Titolo</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="title"
-                                    value={editComment.title}
-                                    onChange={handleModComment}
-                                    required
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="editComment">
-                                <Form.Label className='mt-3 ms-2'>Post</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    name="content"
-                                    value={editComment.content}
-                                    onChange={handleModComment}
-                                    required
-                                />
-                            </Form.Group>
-                            <Button className='mt-3' type="submit">Salva Modifiche</Button>
-                        </Form>
-                    </Modal.Body>
-                </Modal>
-            </div>
 
 
         </MainLayout>

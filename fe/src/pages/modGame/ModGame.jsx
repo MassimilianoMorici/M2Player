@@ -610,8 +610,6 @@ const ModGame = () => {
             const response = await client.get(`/game/${id}`);
             const gameData = response.game
 
-            console.log(gameData);
-
             setFormData({
                 title: gameData.title,
                 category: gameData.category,
@@ -735,15 +733,15 @@ const ModGame = () => {
             )}
 
             <Container className="new-blog-container asd">
-                <h1 className="mb-4">Modifica Post</h1>
+                <h1 className="mb-4">Modifica Game</h1>
                 <Form
                     encType="multipart/form-data"
                     onSubmit={onSubmit}
                 >
 
 
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Titolo</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Titolo</Form.Label>
                         <Form.Control
                             size="lg"
                             name="title"
@@ -754,8 +752,8 @@ const ModGame = () => {
                     </Form.Group>
 
 
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Editor</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Editor</Form.Label>
                         <Form.Control
                             size="lg"
                             name="editor"
@@ -766,8 +764,8 @@ const ModGame = () => {
                     </Form.Group>
 
 
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Platform</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Platform</Form.Label>
                         <Form.Control
                             size="lg"
                             name="platform"
@@ -777,8 +775,8 @@ const ModGame = () => {
                         />
                     </Form.Group>
 
-                    <Form.Group controlId="blog-category" className="mt-3">
-                        <Form.Label>Categoria</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Categoria</Form.Label>
                         <Form.Control
                             size="lg"
                             as="select"
@@ -797,8 +795,8 @@ const ModGame = () => {
                     </Form.Group>
 
 
-                    <Form.Group controlId="blog-category" className="mt-3">
-                        <Form.Label>Voto</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Voto</Form.Label>
                         <Form.Control
                             size="lg"
                             as="select"
@@ -819,11 +817,8 @@ const ModGame = () => {
                         </Form.Control>
                     </Form.Group>
 
-
-
-
-                    <Form.Group controlId="blog-cover" className="mt-3">
-                        <Form.Label>Cover</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Cover</Form.Label>
                         <Form.Control
                             size="lg"
                             type="file"
@@ -832,8 +827,7 @@ const ModGame = () => {
                         />
                     </Form.Group>
 
-
-                    <Form.Label className="mt-3">Post</Form.Label>
+                    <Form.Label className="mt-3 fw-bold">Descrizione</Form.Label>
                     <ReactQuill
                         theme="snow"
                         placeholder={"Scrivi il tuo POST..."}

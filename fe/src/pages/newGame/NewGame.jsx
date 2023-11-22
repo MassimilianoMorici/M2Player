@@ -25,7 +25,7 @@ const NewGame = () => {
         editor: "",
         platform: "",
         category: "MMORPG",
-        rate: "",
+        rate: 1,
         cover: null,
     });
 
@@ -105,15 +105,17 @@ const NewGame = () => {
                         editor: "",
                         platform: "",
                         category: "MMORPG",
-                        rate: "",
+                        rate: 1,
                         cover: null,
                     })
+                    setIsLoading(false)
                     setSuccessMessage("Game creato con successo!");
                     setTimeout(() => {
                         setSuccessMessage(null);
                         navigate('/home')
                     }, 3000);
                 } else {
+                    setIsLoading(false)
                     console.error("Errore nella creazione del game");
                 }
 
@@ -128,16 +130,10 @@ const NewGame = () => {
                 // });
                 // console.log(emailResponse);
 
-
-
-
-
-                setIsLoading(false)
             } catch (e) {
+                setIsLoading(false)
                 console.error("Errore nella richiesta al server:", e);
             }
-
-
         }
     };
 
@@ -166,11 +162,10 @@ const NewGame = () => {
                 <Form encType="multipart/form-data" onSubmit={onSubmit} >
 
 
-
-
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Titolo</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Titolo</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="title"
                             value={formData.title}
@@ -179,9 +174,10 @@ const NewGame = () => {
                         />
                     </Form.Group>
 
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Editor</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Editor</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="editor"
                             value={formData.editor}
@@ -190,9 +186,10 @@ const NewGame = () => {
                         />
                     </Form.Group>
 
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Platform</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Platform</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="platform"
                             value={formData.platform}
@@ -204,9 +201,10 @@ const NewGame = () => {
 
 
 
-                    <Form.Group controlId="blog-category" className="mt-3">
-                        <Form.Label>Categoria</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Categoria</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             as="select"
                             name="category"
@@ -224,9 +222,10 @@ const NewGame = () => {
                     </Form.Group>
 
 
-                    <Form.Group controlId="blog-category" className="mt-3">
-                        <Form.Label>Voto</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Voto</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             as="select"
                             name="rate"
@@ -248,9 +247,10 @@ const NewGame = () => {
 
 
 
-                    <Form.Group controlId="blog-cover" className="mt-3">
-                        <Form.Label>Cover</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Cover</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             type="file"
                             onChange={onChangeSetFile}
@@ -274,7 +274,7 @@ const NewGame = () => {
 
                     {/* <Form.Group controlId="blog-content" className="mt-3"> */}
 
-                    <Form.Label className="mt-3">Descrizione</Form.Label>
+                    <Form.Label className="mt-3 fw-bold">Descrizione</Form.Label>
                     <ReactQuill
                         theme="snow"
                         placeholder={"Descrizione..."}

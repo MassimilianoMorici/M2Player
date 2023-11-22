@@ -1,8 +1,9 @@
 .login {
     max-width: 500px !important;
-    background: rgb(31, 247, 38);
-    background: linear-gradient(87deg, #0b877f 0%, #3b35e0 100%);
+    background: rgb(215, 247, 31);
+    background: linear-gradient(87deg, #eba910 0%, #dde035 100%);
     border-radius: 20px;
+    border: solid black 3px;
 }
 
 .prova {

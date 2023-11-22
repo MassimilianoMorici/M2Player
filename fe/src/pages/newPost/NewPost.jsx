@@ -261,7 +261,6 @@ const NewPost = () => {
         setContent(value);
     };
 
-    console.log(content);
 
 
 
@@ -314,13 +313,14 @@ const NewPost = () => {
                         img: null,
                         category: "Gameplay",
                     })
-
+                    setIsLoading(false)
                     setSuccessMessage("Post creato con successo!");
                     setTimeout(() => {
                         setSuccessMessage(null);
                         navigate('/home')
                     }, 3000);
                 } else {
+                    setIsLoading(false)
                     console.error("Errore nella creazione del post");
                 }
 
@@ -337,8 +337,9 @@ const NewPost = () => {
 
 
 
-                setIsLoading(false)
+
             } catch (e) {
+                setIsLoading(false)
                 console.error("Errore nella richiesta al server:", e);
             }
 
@@ -367,9 +368,10 @@ const NewPost = () => {
                 <h1 className="mb-4">Aggiungi Post</h1>
                 <Form encType="multipart/form-data" onSubmit={onSubmit} >
 
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Game</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Game</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="game"
                             value={formData.game}
@@ -379,9 +381,10 @@ const NewPost = () => {
                     </Form.Group>
 
 
-                    <Form.Group controlId="blog-form" className="mt-3">
-                        <Form.Label>Titolo</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Titolo</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="title"
                             value={formData.title}
@@ -390,9 +393,10 @@ const NewPost = () => {
                         />
                     </Form.Group>
 
-                    <Form.Group controlId="blog-category" className="mt-3">
-                        <Form.Label>Categoria</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Categoria</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             as="select"
                             name="category"
@@ -410,9 +414,10 @@ const NewPost = () => {
                         </Form.Control>
                     </Form.Group>
 
-                    <Form.Group controlId="blog-cover" className="mt-3">
-                        <Form.Label>Cover</Form.Label>
+                    <Form.Group className="mt-3">
+                        <Form.Label className="fw-bold">Cover</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             type="file"
                             onChange={onChangeSetFile}
@@ -436,7 +441,7 @@ const NewPost = () => {
 
                     {/* <Form.Group controlId="blog-content" className="mt-3"> */}
 
-                    <Form.Label className="mt-3">Post</Form.Label>
+                    <Form.Label className="mt-3 fw-bold">Post</Form.Label>
                     <ReactQuill
                         theme="snow"
                         placeholder={"Scrivi il tuo POST..."}

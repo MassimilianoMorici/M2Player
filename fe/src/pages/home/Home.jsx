@@ -4,11 +4,14 @@ import MainLayout from "../../layouts/MainLayout";
 import "./home.css";
 import GameList from "../../components/game/gameList/GameList";
 import PostList from "../../components/post/postList/PostList";
+import MyWelcome from "../../components/welcome/MyWelcome";
 
 const Home = () => {
 
     return (
         <MainLayout>
+
+            <MyWelcome />
             {/* 
             <MyMain />*/}
             <GameList />

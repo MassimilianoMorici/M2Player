@@ -1,5 +1,5 @@
-.m-t {
-    margin-top: 50px;
+.m-t-postlist {
+    margin-top: 120px;
 }
 
 
@@ -95,7 +95,7 @@
 }
 
 .my_input {
-
+    height: 50px;
     padding-left: 20px;
     border-radius: 10px;
     border: solid 2px rgb(66, 66, 66);
@@ -112,4 +112,8 @@
     border: solid 2px rgb(28, 28, 28);
     box-shadow: 5px 5px 5px rgb(42, 42, 42);
     outline: none;
+}
+
+.post_img {
+    width: 200px;
 }

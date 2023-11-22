@@ -2,8 +2,17 @@ import React, { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import "./styles.css";
 import MainLayout from "../../layouts/MainLayout";
+import AlertMessage from '../../components/alertMessage/AlertMessage';
+import { CheckCircleFill } from 'react-bootstrap-icons';
+import { PacmanLoader } from 'react-spinners'
+import { useNavigate } from "react-router-dom";
 
 const NewAccount = () => {
+
+    const navigate = useNavigate()
+
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -44,6 +53,7 @@ const NewAccount = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true)
 
         if (file) {
 
@@ -66,13 +76,21 @@ const NewAccount = () => {
                 const responseData = await response.json();
 
 
-                if (response.statusCode === 201) {
-                    console.log("Author created successfully:", responseData.payload);
+                if (response.status === 201) {
+                    console.log("Account creato con successo: ", responseData.payload);
+                    setIsLoading(false)
+                    setSuccessMessage("Account creato con successo!");
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                        navigate('/home')
+                    }, 3000);
                 } else {
-                    console.error("Errore nella creazione dell'autore");
+                    setIsLoading(false)
+                    console.error("Errore nella creazione dell'account");
                 }
 
             } catch (e) {
+                setIsLoading(false)
                 console.error("Errore nella richiesta al server:", e);
             }
         }
@@ -81,14 +99,27 @@ const NewAccount = () => {
     return (
         <MainLayout>
 
+            {successMessage && (
+                <AlertMessage message={successMessage} >
+                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
+                </AlertMessage>
+            )}
+
+            {isLoading && (
+                <div className='alert-container'>
+                    <PacmanLoader size={50} color="#e0d100" />
+                </div>
+            )}
+
             <Container className="new-blog-container asd">
                 <h1 className="mb-4">Registrati</h1>
                 <Form encType="multipart/form-data" onSubmit={onSubmit} >
 
 
                     <Form.Group controlId="nome-form" className="mt-3">
-                        <Form.Label>Nome</Form.Label>
+                        <Form.Label className="fw-bold">Nome</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="firstName"
                             value={formData.firstName}
@@ -99,8 +130,9 @@ const NewAccount = () => {
 
 
                     <Form.Group controlId="cognome-form" className="mt-3">
-                        <Form.Label>Cognome</Form.Label>
+                        <Form.Label className="fw-bold">Cognome</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="lastName"
                             value={formData.lastName}
@@ -111,8 +143,9 @@ const NewAccount = () => {
 
 
                     <Form.Group controlId="email-form" className="mt-3">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label className="fw-bold">Email</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="email"
                             value={formData.email}
@@ -124,8 +157,9 @@ const NewAccount = () => {
 
 
                     <Form.Group controlId="password-form" className="mt-3">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label className="fw-bold">Password</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="password"
                             value={formData.password}
@@ -136,8 +170,9 @@ const NewAccount = () => {
 
 
                     <Form.Group controlId="dataDiNascita-form" className="mt-3">
-                        <Form.Label>Data di nascita</Form.Label>
+                        <Form.Label className="fw-bold">Data di nascita</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             name="birthday"
                             value={formData.birthday}
@@ -148,8 +183,9 @@ const NewAccount = () => {
 
 
                     <Form.Group controlId="avatar-form" className="mt-3">
-                        <Form.Label>Avatar</Form.Label>
+                        <Form.Label className="fw-bold">Avatar</Form.Label>
                         <Form.Control
+                            required
                             size="lg"
                             type="file"
                             onChange={onChangeSetFile}

@@ -39,9 +39,9 @@ const Account = () => {
     return (
         <MainLayout>
 
-            <div className="container">
+            <div className="container account-bg">
 
-                <div className=" p-account-details">
+                <div className="p-account-details">
                     <h1>Ciao {session.firstName}!</h1>
                     <Image className="p-account-img mt-3" src={session.avatar} fluid />
                 </div>

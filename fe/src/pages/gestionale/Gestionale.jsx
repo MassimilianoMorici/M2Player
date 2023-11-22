@@ -210,7 +210,7 @@ const Gestionale = () => {
             <div className="pGestionale-main">
 
                 {/* LISTA GAME */}
-                <div className="container">
+                <div className="container gestionale-bg">
                     <div className="d-flex align-items-center">
                         <h2 className="me-3 my-0" >
                             GAME
@@ -242,10 +242,9 @@ const Gestionale = () => {
                     )}
                 </div>
 
-                <hr className="my-5" />
 
                 {/* LISTA POST */}
-                <div className="container">
+                <div className="container gestionale-bg">
                     <div className="d-flex align-items-center">
                         <h2 className="me-3 my-0" >
                             POST
@@ -278,10 +277,9 @@ const Gestionale = () => {
                     )}
                 </div>
 
-                <hr className="my-5" />
 
                 {/* LISTA ACCOUNT */}
-                <div className="container mb-5">
+                <div className="container mb-5 gestionale-bg">
                     <div className="d-flex align-items-center">
                         <h2 className="me-3 my-0" >
                             ACCOUNT
