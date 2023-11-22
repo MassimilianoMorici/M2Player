@@ -84,7 +84,8 @@ const Login = () => {
             )}
 
 
-            <Container className="new-blog-container login" >
+            <div className="new-blog-container container login " >
+
                 <Form onSubmit={onSubmit}>
                     <Form.Group controlId="author-form" className="mt-3">
                         < Form.Label className="text-white"> Email </Form.Label>
@@ -112,7 +113,6 @@ const Login = () => {
                     </Form.Group>
 
                     <Form.Group className="d-flex flex-column my-4 justify-content-center">
-
                         <Button
                             className="my-3 text-center prova"
                             type="submit"
@@ -126,7 +126,7 @@ const Login = () => {
                     </Form.Group>
 
                 </Form >
-            </Container >
+            </div>
         </MainLayout>
     )
 }

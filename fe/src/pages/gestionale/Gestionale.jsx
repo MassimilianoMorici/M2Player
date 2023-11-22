@@ -113,6 +113,40 @@ const Gestionale = () => {
     //         console.log(error);
     //     }
     // }
+
+
+    //prima della mod elimina tutto
+    // const deleteAccount = async (idAccount) => {
+
+    //     const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo account?");
+
+    //     if (confirmDelete) {
+    //         setIsLoadingDelete(true); // Mostra il loading
+
+    //         setTimeout(async () => {
+    //             try {
+    //                 const response = await client.delete(`account/delete/${idAccount}`);
+
+    //                 if (response.statusCode === 200) {
+    //                     console.log("Eliminazione account avvenuta con successo");
+    //                     setIsLoadingDelete(false)
+    //                     setSuccessMessage("Account eliminato con successo!");
+    //                     getAccounts();
+    //                     setTimeout(() => {
+    //                         setSuccessMessage(null);
+    //                     }, 3000);
+    //                 } else {
+    //                     console.error("Errore durante l'eliminazione dell'account", response);
+    //                     setIsLoadingDelete(false); // Nasconde il loading in caso di errore
+    //                 }
+    //             } catch (error) {
+    //                 console.log(error);
+    //                 setIsLoadingDelete(false); // Nasconde il loading in caso di eccezione
+    //             }
+    //         }, 2000); // Mostra il loading per 2 secondi prima di eseguire la chiamata
+    //     };
+    // }
+
     const deleteAccount = async (idAccount) => {
 
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo account?");
@@ -122,7 +156,7 @@ const Gestionale = () => {
 
             setTimeout(async () => {
                 try {
-                    const response = await client.delete(`account/delete/${idAccount}`);
+                    const response = await client.delete(`account/${idAccount}/deleteCommentPost`);
 
                     if (response.statusCode === 200) {
                         console.log("Eliminazione account avvenuta con successo");

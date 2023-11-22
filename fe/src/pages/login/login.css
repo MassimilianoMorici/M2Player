@@ -1,5 +1,5 @@
 .login {
-    width: 500px !important;
+    max-width: 500px !important;
     background: rgb(31, 247, 38);
     background: linear-gradient(87deg, #0b877f 0%, #3b35e0 100%);
     border-radius: 20px;
