@@ -200,7 +200,6 @@ import useSession from "../../hooks/useSession";
 import MainLayout from "../../layouts/MainLayout";
 import ReactQuill from 'react-quill';
 import AlertMessage from '../../components/alertMessage/AlertMessage';
-import { CheckCircleFill } from 'react-bootstrap-icons';
 import 'react-quill/dist/quill.snow.css';
 import "./newPost.css";
 import "./_textEditor.scss"
@@ -215,6 +214,7 @@ const NewPost = () => {
     const navigate = useNavigate()
 
     const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -243,29 +243,18 @@ const NewPost = () => {
             return await response.json()
         } catch (e) {
             console.log(e, "Errore in uploadFile");
+            setFailedMessage("Errore upload del file!");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     }
 
-
-
-
-
-
-
-
-
     const [content, setContent] = useState('');
-
 
     const handleQuillChange = (value) => {
         setContent(value);
     };
-
-
-
-
-
-
 
 
     const handleInputChange = (e) => {
@@ -321,13 +310,17 @@ const NewPost = () => {
                     }, 3000);
                 } else {
                     setIsLoading(false)
+                    setFailedMessage("Errore nella creazione del post!");
                     console.error("Errore nella creazione del post");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
 
                 // const emailResponse = await client.post("/send-email", {
                 //     to: session.email,
-                //     subject: 'Nuovo Blog Post',
-                //     text: 'Creazione del blog post avvenuta con successo'
+                //     subject: 'Nuovo Post',
+                //     text: 'Creazione del post avvenuta con successo'
                 // }, {
                 //     headers: {
                 //         "Content-Type": "application/json",
@@ -340,7 +333,11 @@ const NewPost = () => {
 
             } catch (e) {
                 setIsLoading(false)
+                setFailedMessage("Errore nella richiesta al server");
                 console.error("Errore nella richiesta al server:", e);
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
 
 
@@ -352,11 +349,23 @@ const NewPost = () => {
     return (
         <MainLayout>
 
-            {successMessage && (
+            {/* {successMessage && (
                 <AlertMessage message={successMessage} >
                     <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
                 </AlertMessage>
+            )} */}
+
+            {successMessage && (
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
             )}
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
+            )}
+
 
             {isLoading && (
                 <div className='alert-container'>

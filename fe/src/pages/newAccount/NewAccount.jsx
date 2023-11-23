@@ -3,7 +3,6 @@ import { Button, Container, Form } from "react-bootstrap";
 import "./styles.css";
 import MainLayout from "../../layouts/MainLayout";
 import AlertMessage from '../../components/alertMessage/AlertMessage';
-import { CheckCircleFill } from 'react-bootstrap-icons';
 import { PacmanLoader } from 'react-spinners'
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +11,7 @@ const NewAccount = () => {
     const navigate = useNavigate()
 
     const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -40,6 +40,10 @@ const NewAccount = () => {
             return await response.json()
         } catch (e) {
             console.log(e, "Errore in uploadFile");
+            setFailedMessage("Errore upload del file!");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     }
 
@@ -87,11 +91,19 @@ const NewAccount = () => {
                 } else {
                     setIsLoading(false)
                     console.error("Errore nella creazione dell'account");
+                    setFailedMessage("Errore nella creazione dell'account!");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
 
             } catch (e) {
                 setIsLoading(false)
                 console.error("Errore nella richiesta al server:", e);
+                setFailedMessage("Errore nella richiesta al server");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         }
     };
@@ -100,9 +112,15 @@ const NewAccount = () => {
         <MainLayout>
 
             {successMessage && (
-                <AlertMessage message={successMessage} >
-                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
-                </AlertMessage>
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
+            )}
+
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
             )}
 
             {isLoading && (

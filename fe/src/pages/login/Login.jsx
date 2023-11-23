@@ -140,7 +140,7 @@ import { Container, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import AlertMessage from '../../components/alertMessage/AlertMessage';
-import { CheckCircleFill, EyeFill } from 'react-bootstrap-icons';
+import { EyeFill } from 'react-bootstrap-icons';
 import { PacmanLoader } from 'react-spinners'
 import "./login.css";
 
@@ -151,6 +151,7 @@ const Login = () => {
     const [login, setLogin] = useState(null)
     const navigate = useNavigate()
     const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -200,10 +201,18 @@ const Login = () => {
                 } else {
                     setIsLoading(false)
                     console.error("Errore nel login")
+                    setFailedMessage("Email o password errati!");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
             } catch (e) {
                 setIsLoading(false)
                 console.log(e, "Errore nell'invio dei dati");
+                setFailedMessage("Errore nella richiesta al server");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         }, 2000)
     }
@@ -214,9 +223,15 @@ const Login = () => {
         <MainLayout>
 
             {successMessage && (
-                <AlertMessage message={successMessage} >
-                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
-                </AlertMessage>
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
+            )}
+
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
             )}
 
             {isLoading && (

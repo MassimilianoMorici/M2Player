@@ -920,7 +920,6 @@ import AxiosClient from "../../client/client";
 import { useParams } from 'react-router-dom';
 
 import AlertMessage from '../../components/alertMessage/AlertMessage';
-import { CheckCircleFill } from 'react-bootstrap-icons';
 import { PacmanLoader } from 'react-spinners'
 import { useNavigate } from "react-router-dom";
 
@@ -934,7 +933,9 @@ const ModPost = () => {
     const navigate = useNavigate()
 
     const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingData, setIsLoadingData] = useState(false);
 
     const [formData, setFormData] = useState({
         author: session.id,
@@ -949,18 +950,25 @@ const ModPost = () => {
     const [content, setContent] = useState('');
 
     const getPostData = async () => {
+
+        setIsLoadingData(true)
+
         try {
             const response = await client.get(`/post/${id}`);
             const postData = response.post
-            setFormData({
-                author: session.id,
-                game: postData.game,
-                title: postData.title,
-                content: postData.content,
-                img: postData.img,
-                category: postData.category,
-                _id: id
-            });
+            // Visualizza lo spinner per almeno 3 secondi usando setTimeout
+            setTimeout(() => {
+                setFormData({
+                    author: session.id,
+                    game: postData.game,
+                    title: postData.title,
+                    content: postData.content,
+                    img: postData.img,
+                    category: postData.category,
+                    _id: id
+                });
+                setIsLoadingData(false); // Indica il completamento del caricamento dei dati
+            }, 3000);
 
         } catch (e) {
             console.log(e);
@@ -989,6 +997,10 @@ const ModPost = () => {
             return await response.json()
         } catch (e) {
             console.log(e, "Errore in uploadFile");
+            setFailedMessage("Errore upload del file!");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     }
 
@@ -1143,16 +1155,29 @@ const ModPost = () => {
                         "Content-Type": "application/json",
                     },
                 });
-                console.log("Post modificato con successo: ", response.payload);
-                setIsLoading(false)
-                setSuccessMessage("Post modificato con successo!");
-                setTimeout(() => {
-                    setSuccessMessage(null);
-                    navigate(`/post/${id}`)
-                }, 3000);
+                if (response.statusCode === 200) {
+                    console.log("Post modificato con successo: ", response.payload);
+                    setIsLoading(false)
+                    setSuccessMessage("Post modificato con successo!");
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                        navigate(`/post/${id}`)
+                    }, 3000);
+                } else {
+                    setIsLoading(false)
+                    console.error("Errore nella modifica del post");
+                    setFailedMessage("Errore nella modifica del post!");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
+                }
             } catch (e) {
                 setIsLoading(false)
                 console.error("Error while making the request to the server:", e);
+                setFailedMessage("Errore nella richiesta al server");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         }, 2000);
     };
@@ -1172,9 +1197,15 @@ const ModPost = () => {
         <MainLayout>
 
             {successMessage && (
-                <AlertMessage message={successMessage} >
-                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
-                </AlertMessage>
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
+            )}
+
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
             )}
 
             {isLoading && (
@@ -1186,108 +1217,118 @@ const ModPost = () => {
 
             <Container className="new-blog-container asd">
                 <h1 className="mb-4">Modifica Post</h1>
-                <Form
-                    encType="multipart/form-data"
-                    onSubmit={onSubmit}
-                >
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">Game</Form.Label>
-                        <Form.Control
-                            required
-                            size="lg"
-                            name="game"
-                            value={formData.game}
-                            onChange={handleInputChange}
-                            placeholder="Gioco"
-                        />
-                    </Form.Group>
+                {isLoadingData ? (
+                    <div className='container d-flex justify-content-center spinner-margin'>
+                        <PacmanLoader size={40} color="#e0d100" />
+                    </div>
+                ) : (
+                    <>
 
-
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">Titolo</Form.Label>
-                        <Form.Control
-                            required
-                            size="lg"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleInputChange}
-                            placeholder="Titolo"
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">Categoria</Form.Label>
-                        <Form.Control
-                            required
-                            size="lg"
-                            as="select"
-                            name="category"
-                            value={formData.category}
-                            onChange={handleInputChange}
+                        <Form
+                            encType="multipart/form-data"
+                            onSubmit={onSubmit}
                         >
-                            <option value="Easter Egg">Easter Egg</option>
-                            <option value="Gameplay">Gameplay</option>
-                            <option value="Guide">Guide</option>
-                            <option value="Nuove uscite">Nuove uscite</option>
-                            <option value="Party">Party</option>
-                            <option value="Preordini">Preordini</option>
-                            <option value="Segreti">Segreti</option>
-                            <option value="Tutorial">Tutorial</option>
-                        </Form.Control>
-                    </Form.Group>
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">Cover</Form.Label>
-                        <Form.Control
-                            size="lg"
-                            type="file"
-                            //value={formData.img}
-                            onChange={onChangeSetFile}
-                            name="img"
-                        />
-                    </Form.Group>
+                            <Form.Group className="mt-3">
+                                <Form.Label className="fw-bold">Game</Form.Label>
+                                <Form.Control
+                                    required
+                                    size="lg"
+                                    name="game"
+                                    value={formData.game}
+                                    onChange={handleInputChange}
+                                    placeholder="Gioco"
+                                />
+                            </Form.Group>
 
 
-                    <Form.Label className="mt-3 fw-bold">Post</Form.Label>
-                    <ReactQuill
-                        theme="snow"
-                        placeholder={"Scrivi il tuo POST..."}
-                        value={formData.content}
-                        onChange={handleQuillChange}
-                        modules={{
-                            toolbar: [
-                                [{ header: [1, 2, false] }],
-                                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                                [{ color: [] }, { background: [] }],
-                                [{ list: 'ordered' }, { list: 'bullet' }],
-                                ['link', 'image', 'video'],
-                                ['clean']
-                            ]
-                        }}
-                    />
-                    {/* Utilizza un campo nascosto per inviare il contenuto al server */}
+                            <Form.Group className="mt-3">
+                                <Form.Label className="fw-bold">Titolo</Form.Label>
+                                <Form.Control
+                                    required
+                                    size="lg"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleInputChange}
+                                    placeholder="Titolo"
+                                />
+                            </Form.Group>
 
-                    <input type="hidden" name="content" value={content} />
+                            <Form.Group className="mt-3">
+                                <Form.Label className="fw-bold">Categoria</Form.Label>
+                                <Form.Control
+                                    required
+                                    size="lg"
+                                    as="select"
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="Easter Egg">Easter Egg</option>
+                                    <option value="Gameplay">Gameplay</option>
+                                    <option value="Guide">Guide</option>
+                                    <option value="Nuove uscite">Nuove uscite</option>
+                                    <option value="Party">Party</option>
+                                    <option value="Preordini">Preordini</option>
+                                    <option value="Segreti">Segreti</option>
+                                    <option value="Tutorial">Tutorial</option>
+                                </Form.Control>
+                            </Form.Group>
+
+                            <Form.Group className="mt-3">
+                                <Form.Label className="fw-bold">Cover</Form.Label>
+                                <Form.Control
+                                    size="lg"
+                                    type="file"
+                                    //value={formData.img}
+                                    onChange={onChangeSetFile}
+                                    name="img"
+                                />
+                            </Form.Group>
+
+
+                            <Form.Label className="mt-3 fw-bold">Post</Form.Label>
+                            <ReactQuill
+                                theme="snow"
+                                placeholder={"Scrivi il tuo POST..."}
+                                value={formData.content}
+                                onChange={handleQuillChange}
+                                modules={{
+                                    toolbar: [
+                                        [{ header: [1, 2, false] }],
+                                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                        [{ color: [] }, { background: [] }],
+                                        [{ list: 'ordered' }, { list: 'bullet' }],
+                                        ['link', 'image', 'video'],
+                                        ['clean']
+                                    ]
+                                }}
+                            />
+                            {/* Utilizza un campo nascosto per inviare il contenuto al server */}
+
+                            <input type="hidden" name="content" value={content} />
 
 
 
-                    <Form.Group className="d-flex mt-3 justify-content-end">
-                        <Button type="reset" size="lg" variant="outline-dark">
-                            Reset
-                        </Button>
-                        <Button
-                            type="submit"
-                            size="lg"
-                            variant="dark"
-                            style={{
-                                marginLeft: "1em",
-                            }}
-                        >
-                            Submit
-                        </Button>
-                    </Form.Group>
-                </Form>
+                            <Form.Group className="d-flex mt-3 justify-content-end">
+                                <Button type="reset" size="lg" variant="outline-dark">
+                                    Reset
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    size="lg"
+                                    variant="dark"
+                                    style={{
+                                        marginLeft: "1em",
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                            </Form.Group>
+                        </Form>
+                    </>
+                )}
             </Container>
         </MainLayout >
     );

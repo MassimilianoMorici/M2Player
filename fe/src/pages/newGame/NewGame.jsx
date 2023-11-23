@@ -6,7 +6,6 @@ import 'react-quill/dist/quill.snow.css';
 import "./newGame.css";
 import "./_textEditor.scss"
 import AlertMessage from '../../components/alertMessage/AlertMessage';
-import { CheckCircleFill } from 'react-bootstrap-icons';
 import { PacmanLoader } from 'react-spinners'
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +17,7 @@ const NewGame = () => {
     const navigate = useNavigate()
 
     const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -28,7 +28,7 @@ const NewGame = () => {
         rate: 1,
         cover: null,
     });
-
+    //asdasdasdasd
     const [file, setFile] = useState(null)
 
     const onChangeSetFile = (e) => {
@@ -46,6 +46,10 @@ const NewGame = () => {
             return await response.json()
         } catch (e) {
             console.log(e, "Errore in uploadFile");
+            setFailedMessage("Errore upload del file!");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     }
 
@@ -117,12 +121,16 @@ const NewGame = () => {
                 } else {
                     setIsLoading(false)
                     console.error("Errore nella creazione del game");
+                    setFailedMessage("Errore nella creazione del game!");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
 
                 // const emailResponse = await client.post("/send-email", {
                 //     to: session.email,
-                //     subject: 'Nuovo Blog Post',
-                //     text: 'Creazione del blog post avvenuta con successo'
+                //     subject: 'Nuovo Game',
+                //     text: 'Creazione del Game avvenuta con successo'
                 // }, {
                 //     headers: {
                 //         "Content-Type": "application/json",
@@ -131,8 +139,12 @@ const NewGame = () => {
                 // console.log(emailResponse);
 
             } catch (e) {
-                setIsLoading(false)
                 console.error("Errore nella richiesta al server:", e);
+                setIsLoading(false)
+                setFailedMessage("Errore nella richiesta al server");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         }
     };
@@ -145,9 +157,15 @@ const NewGame = () => {
 
 
             {successMessage && (
-                <AlertMessage message={successMessage} >
-                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
-                </AlertMessage>
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
+            )}
+
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
             )}
 
             {isLoading && (
