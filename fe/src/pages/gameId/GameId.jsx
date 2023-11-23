@@ -367,10 +367,11 @@ const GameId = () => {
                         <Image className="img-Idpage" src={posts.game?.cover} fluid />
                         <div className='mt-5'>
                             <h1 className="fw-bold">{posts.game?.title}</h1>
+                            <h6 className="fw-bold">{posts.game?.editor}</h6>
+                            <h5 className="fw-bold">{posts.game?.platform}</h5>
+                            <h5>Categoria: {posts.game?.category}</h5>
                         </div>
-                        <div className='d-flex justify-content-end'>
-                            <h3>Categoria: {posts.game?.category}</h3>
-                        </div>
+
                         <div className='mt-5'>
                             <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
                         </div>

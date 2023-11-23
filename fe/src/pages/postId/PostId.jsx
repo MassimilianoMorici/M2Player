@@ -1224,12 +1224,13 @@ const PostId = () => {
                     <div>
                         <Image className="img-Idpage" src={posts.post?.img} fluid />
                         <div className='mt-5'>
+                            <h4 className="fw-bold">{posts.post?.game}</h4>
                             <h1 className="fw-bold">{posts.post?.title}</h1>
                         </div>
                         <div className="mt-3">
                             <h3>Categoria: {posts.post?.category}</h3>
 
-                            <div className='blog-details-author d-flex  align-items-center mt-3'>
+                            <div className='blog-details-author d-flex  align-items-center mt-5'>
                                 <img src={`${posts.post?.author.avatar}`} alt="img" />
                                 <p>{`${posts.post?.author.firstName} ${posts.post?.author.lastName}`}</p>
                             </div>

@@ -952,9 +952,6 @@ const ModPost = () => {
         try {
             const response = await client.get(`/post/${id}`);
             const postData = response.post
-
-            console.log(postData);
-
             setFormData({
                 author: session.id,
                 game: postData.game,
@@ -1014,7 +1011,6 @@ const ModPost = () => {
         });
     };
 
-    console.log(content);
 
 
     const onChangeSetFile = (e) => {
@@ -1163,9 +1159,6 @@ const ModPost = () => {
 
 
 
-    console.log(formData);
-
-    console.log("FILE: ", file);
 
 
 
