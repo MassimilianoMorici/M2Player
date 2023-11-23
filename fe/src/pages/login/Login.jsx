@@ -136,7 +136,7 @@
 
 
 import React, { useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import AlertMessage from '../../components/alertMessage/AlertMessage';
@@ -147,9 +147,10 @@ import "./login.css";
 
 const Login = () => {
 
+    const navigate = useNavigate()
+
     const [loginData, setLoginData] = useState({})
     const [login, setLogin] = useState(null)
-    const navigate = useNavigate()
     const [successMessage, setSuccessMessage] = useState(null);
     const [failedMessage, setFailedMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);

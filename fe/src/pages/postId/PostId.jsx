@@ -869,7 +869,7 @@ import DOMPurify from 'dompurify';
 import MainLayout from '../../layouts/MainLayout';
 import AxiosClient from '../../client/client';
 import useSession from '../../hooks/useSession';
-import { Trash3, Pen, CheckCircleFill } from 'react-bootstrap-icons';
+import { Trash3, Pen } from 'react-bootstrap-icons';
 import AlertMessage from '../../components/alertMessage/AlertMessage';
 
 import { PacmanLoader } from 'react-spinners'
@@ -879,18 +879,18 @@ import "./postId.css";
 
 const PostId = () => {
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoadingComments, setIsLoadingComments] = useState(false);
-    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
-
     const session = useSession()
     const client = new AxiosClient()
     const navigate = useNavigate()
     const { id } = useParams();
 
-    const [successMessage, setSuccessMessage] = useState(null);
-
     const [posts, setPosts] = useState([])
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingComments, setIsLoadingComments] = useState(false);
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+    const [viewComments, setViewComments] = useState([])
 
     const [newComment, setNewComment] = useState({
         title: "",
@@ -901,6 +901,7 @@ const PostId = () => {
     // const [viewComments, setViewComments] = useState([])
 
 
+    //GET POST ID
     const getPost = async () => {
 
         try {
@@ -913,7 +914,6 @@ const PostId = () => {
             console.log(e);
         }
     };
-
 
     useEffect(() => {
         getPost();
@@ -951,6 +951,7 @@ const PostId = () => {
         });
     };
 
+    //POST COMMENTI
     const onSubmit = async (e) => {
         e.preventDefault();
 
@@ -964,43 +965,51 @@ const PostId = () => {
             });
             if (response.statusCode === 201) {
                 console.log("Commento creato con successo: ", response.payload);
+                setSuccessMessage("Commento creato con successo!");
+                getPosts()
+
+                setNewComment({
+                    title: "",
+                    content: "",
+                    author: session.id,
+                    post: id,
+                })
+
+                setTimeout(() => {
+                    setSuccessMessage(null);
+                }, 3000);
+
             } else {
                 console.error("Errore nella creazione del commento");
+                setFailedMessage("Errore nella creazione del commento!");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
-
-
-            setSuccessMessage("Commento creato con successo!");
-            getPosts()
-
-            setNewComment({
-                title: "",
-                content: "",
-                author: session.id,
-                post: id,
-            })
-
-            setTimeout(() => {
-                setSuccessMessage(null);
-            }, 3000);
 
         } catch (e) {
             console.error("Errore nella richiesta al server:", e);
+            setFailedMessage("Errore nella richiesta al server");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     }
 
 
-    //get commenti
-    const [viewComments, setViewComments] = useState([])
 
+
+    //GET COMMENTI
     const getPosts = async () => {
 
+        setIsLoadingComments(true)
+
         try {
-            setIsLoadingComments(true)
+
             const response = await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/post/viewComments/${id}`);
             const data = await response.json()
             setViewComments(data)
             setIsLoadingComments(false)
-
 
         } catch (e) {
             console.log(e);
@@ -1013,6 +1022,7 @@ const PostId = () => {
 
     // console.log(viewComments);
 
+
     //DELETE COMMENT
     const deleteComment = async (idComment) => {
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo commento?");
@@ -1022,20 +1032,26 @@ const PostId = () => {
                 const response = await client.delete(`/comment/delete/${idComment}`);
                 if (response.statusCode === 200) {
                     console.log("comment deleted successfully:");
+                    setSuccessMessage("Commento eliminato con successo!");
+                    getPosts()
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                    }, 3000);
+
                 } else {
                     console.error("Errore nella eliminazione del commento");
+                    setFailedMessage("Errore nella eliminazione del commento!");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
-
-                setSuccessMessage("Commento eliminato con successo!");
-
-                getPosts()
-
-                setTimeout(() => {
-                    setSuccessMessage(null);
-                }, 3000);
 
             } catch (e) {
                 console.error("Errore nella richiesta al server:", e);
+                setFailedMessage("Errore nella richiesta al server");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         }
     }
@@ -1097,9 +1113,17 @@ const PostId = () => {
 
             } else {
                 console.error("Errore durante la modifica del commento");
+                setFailedMessage("Errore durante la modifica del commento!");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         } catch (e) {
-            console.error("Errore durante la modifica del commento", e);
+            console.error("Errore nella richiesta al server", e);
+            setFailedMessage("Errore nella richiesta al server");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     };
 
@@ -1144,13 +1168,15 @@ const PostId = () => {
     //         console.error("Errore generico durante l'eliminazione", error);
     //     }
     // };
+
+    //DELETE POST
     const deletePost = async () => {
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo post?");
 
         if (confirmDelete) {
 
-
             setIsLoadingDelete(true)
+
             setTimeout(async () => {
                 // Se ci sono commenti
                 if (viewComments.comments.length > 0) {
@@ -1161,10 +1187,20 @@ const PostId = () => {
                             console.log("Eliminazione commenti del post avvenuta con successo");
                         } else {
                             console.error("Errore durante l'eliminazione dei commenti del post", responseComments);
+                            setIsLoadingDelete(false)
+                            setFailedMessage("Errore durante l'eliminazione dei commenti del post!");
+                            setTimeout(() => {
+                                setFailedMessage(null);
+                            }, 3000);
                         }
 
                     } catch (error) {
+                        setIsLoadingDelete(false)
                         console.error("Errore generico durante l'eliminazione", error);
+                        setFailedMessage("Errore nella richiesta al server");
+                        setTimeout(() => {
+                            setFailedMessage(null);
+                        }, 3000);
                     }
                 }
 
@@ -1184,11 +1220,19 @@ const PostId = () => {
                     } else {
                         setIsLoadingDelete(false)
                         console.error("Errore durante l'eliminazione del post", responsePost);
+                        setFailedMessage("Errore durante l'eliminazione del post!");
+                        setTimeout(() => {
+                            setFailedMessage(null);
+                        }, 3000);
                     }
 
                 } catch (error) {
                     setIsLoadingDelete(false)
                     console.error("Errore generico durante l'eliminazione", error);
+                    setFailedMessage("Errore nella richiesta al server");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
             }, 2000);
         };
@@ -1198,11 +1242,16 @@ const PostId = () => {
     return (
         <MainLayout>
 
-
             {successMessage && (
-                <AlertMessage message={successMessage} >
-                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
-                </AlertMessage>
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
+            )}
+
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
             )}
 
             {isLoadingDelete && (

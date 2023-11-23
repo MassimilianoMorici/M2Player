@@ -3,7 +3,7 @@ import MainLayout from "../../layouts/MainLayout";
 import AxiosClient from "../../client/client";
 import "./gestionale.css"
 import { Link } from "react-router-dom";
-import { CaretDownFill, CaretRightFill, Trash3, CheckCircleFill } from "react-bootstrap-icons";
+import { CaretDownFill, CaretRightFill, Trash3 } from "react-bootstrap-icons";
 import AlertMessage from '../../components/alertMessage/AlertMessage';
 import { PacmanLoader } from 'react-spinners'
 
@@ -13,6 +13,7 @@ const client = new AxiosClient()
 const Gestionale = () => {
 
     const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
 
     const [games, setGames] = useState([])
     const [posts, setPosts] = useState([])
@@ -152,7 +153,7 @@ const Gestionale = () => {
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo account?");
 
         if (confirmDelete) {
-            setIsLoadingDelete(true); // Mostra il loading
+            setIsLoadingDelete(true);
 
             setTimeout(async () => {
                 try {
@@ -168,17 +169,23 @@ const Gestionale = () => {
                         }, 3000);
                     } else {
                         console.error("Errore durante l'eliminazione dell'account", response);
-                        setIsLoadingDelete(false); // Nasconde il loading in caso di errore
+                        setIsLoadingDelete(false);
+                        setFailedMessage("Errore durante l'eliminazione dell'account!");
+                        setTimeout(() => {
+                            setFailedMessage(null);
+                        }, 3000);
                     }
                 } catch (error) {
                     console.log(error);
-                    setIsLoadingDelete(false); // Nasconde il loading in caso di eccezione
+                    setIsLoadingDelete(false);
+                    setFailedMessage("Errore nella richiesta al server");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
             }, 2000); // Mostra il loading per 2 secondi prima di eseguire la chiamata
         };
     }
-
-
 
 
     const handleDeleteClick = (accountId) => {
@@ -188,17 +195,19 @@ const Gestionale = () => {
     };
 
 
-    console.log("GET GAME: ", games);
-    console.log("GET POST: ", posts.posts);
-    console.log("GET ACCOUNT: ", accounts);
-
     return (
         <MainLayout>
 
             {successMessage && (
-                <AlertMessage message={successMessage} >
-                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
-                </AlertMessage>
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
+            )}
+
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
             )}
 
             {isLoadingDelete && (

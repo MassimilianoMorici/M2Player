@@ -21,7 +21,7 @@ import DOMPurify from 'dompurify';
 import MainLayout from '../../layouts/MainLayout';
 import AxiosClient from '../../client/client';
 import useSession from '../../hooks/useSession';
-import { Trash3, Pen, CheckCircleFill } from 'react-bootstrap-icons';
+import { Trash3, Pen } from 'react-bootstrap-icons';
 import AlertMessage from '../../components/alertMessage/AlertMessage';
 import { PacmanLoader } from 'react-spinners'
 
@@ -40,10 +40,11 @@ const GameId = () => {
 
     const [posts, setPosts] = useState([])
     const [successMessage, setSuccessMessage] = useState(null);
+    const [failedMessage, setFailedMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingComments, setIsLoadingComments] = useState(false);
     const [isLoadingDelete, setIsLoadingDelete] = useState(false);
-
+    const [viewComments, setViewComments] = useState([])
 
     const [newComment, setNewComment] = useState({
         title: "",
@@ -54,6 +55,7 @@ const GameId = () => {
     // const [viewComments, setViewComments] = useState([])
 
 
+    //GET GAME ID
     const getPost = async () => {
 
         try {
@@ -91,6 +93,8 @@ const GameId = () => {
         });
     };
 
+
+    //POST COMMENTI
     const onSubmit = async (e) => {
         e.preventDefault();
 
@@ -104,39 +108,43 @@ const GameId = () => {
             });
             if (response.statusCode === 201) {
                 console.log("Commento creato con successo: ", response.payload);
+                setSuccessMessage("Commento creato con successo!");
+                getPosts()
+
+                setNewComment({
+                    title: "",
+                    content: "",
+                    author: session.id,
+                    game: id,
+                })
+                setTimeout(() => {
+                    setSuccessMessage(null);
+                }, 3000);
+
             } else {
                 console.error("Errore nella creazione del commento");
+                setFailedMessage("Errore nella creazione del commento!");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
-
-            setSuccessMessage("Commento creato con successo!");
-            getPosts()
-
-            setNewComment({
-                title: "",
-                content: "",
-                author: session.id,
-                game: id,
-            })
-
-            setTimeout(() => {
-                setSuccessMessage(null);
-            }, 3000);
-
-
         } catch (e) {
             console.error("Errore nella richiesta al server:", e);
+            setFailedMessage("Errore nella richiesta al server");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     }
 
 
-    //get commenti
-
-    const [viewComments, setViewComments] = useState([])
-
+    //GET COMMENTI
     const getPosts = async () => {
 
+        setIsLoadingComments(true)
+
         try {
-            setIsLoadingComments(true)
+
             const response = await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/game/viewComments/${id}`);
             const data = await response.json()
             setViewComments(data)
@@ -154,29 +162,37 @@ const GameId = () => {
     // console.log(viewComments);
 
     //DELETE COMMENT
-
     const deleteComment = async (idComment) => {
+
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo commento?");
 
         if (confirmDelete) {
+
             try {
+
                 const response = await client.delete(`/comment/delete/${idComment}`);
+
                 if (response.statusCode === 200) {
-                    console.log("comment deleted successfully:");
+                    setSuccessMessage("Commento eliminato con successo!");
+                    getPosts()
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                    }, 3000);
+
                 } else {
                     console.error("Errore nella eliminazione del commento");
+                    setFailedMessage("Errore nella eliminazione del commento!");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
-
-                setSuccessMessage("Commento eliminato con successo!");
-
-                getPosts()
-
-                setTimeout(() => {
-                    setSuccessMessage(null);
-                }, 3000);
 
             } catch (e) {
                 console.error("Errore nella richiesta al server:", e);
+                setFailedMessage("Errore nella richiesta al server");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         }
     }
@@ -238,9 +254,17 @@ const GameId = () => {
 
             } else {
                 console.error("Errore durante la modifica del commento");
+                setFailedMessage("Errore durante la modifica del commento!");
+                setTimeout(() => {
+                    setFailedMessage(null);
+                }, 3000);
             }
         } catch (e) {
-            console.error("Errore durante la modifica del commento", e);
+            console.error("Errore nella richiesta al server", e);
+            setFailedMessage("Errore nella richiesta al server");
+            setTimeout(() => {
+                setFailedMessage(null);
+            }, 3000);
         }
     };
 
@@ -287,6 +311,8 @@ const GameId = () => {
     //         console.error("Errore generico durante l'eliminazione", error);
     //     }
     // };
+
+    //DELETE GAME
     const deleteGame = async () => {
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo game?");
 
@@ -304,10 +330,20 @@ const GameId = () => {
                             console.log("Eliminazione commenti del game avvenuta con successo");
                         } else {
                             console.error("Errore durante l'eliminazione dei commenti del game", responseComments);
+                            setIsLoadingDelete(false)
+                            setFailedMessage("Errore durante l'eliminazione dei commenti del game!");
+                            setTimeout(() => {
+                                setFailedMessage(null);
+                            }, 3000);
                         }
 
                     } catch (error) {
+                        setIsLoadingDelete(false)
                         console.error("Errore generico durante l'eliminazione", error);
+                        setFailedMessage("Errore nella richiesta al server");
+                        setTimeout(() => {
+                            setFailedMessage(null);
+                        }, 3000);
                     }
                 }
 
@@ -328,11 +364,19 @@ const GameId = () => {
                     } else {
                         setIsLoadingDelete(false)
                         console.error("Errore durante l'eliminazione del game", responseGame);
+                        setFailedMessage("Errore durante l'eliminazione del game!");
+                        setTimeout(() => {
+                            setFailedMessage(null);
+                        }, 3000);
                     }
 
                 } catch (error) {
                     setIsLoadingDelete(false)
                     console.error("Errore generico durante l'eliminazione", error);
+                    setFailedMessage("Errore nella richiesta al server");
+                    setTimeout(() => {
+                        setFailedMessage(null);
+                    }, 3000);
                 }
             }, 2000);
         };
@@ -344,9 +388,15 @@ const GameId = () => {
         <MainLayout>
 
             {successMessage && (
-                <AlertMessage message={successMessage} >
-                    <div><CheckCircleFill className='me-2' size={30} />{successMessage}</div>
-                </AlertMessage>
+                <div>
+                    <AlertMessage message={successMessage} success={true} />
+                </div>
+            )}
+
+            {failedMessage && (
+                <div>
+                    <AlertMessage message={failedMessage} success={false} />
+                </div>
             )}
 
             {isLoadingDelete && (
