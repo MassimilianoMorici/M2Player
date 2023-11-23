@@ -15,6 +15,7 @@ import CategoryGame from "./pages/categoryGame/CategoryGame";
 import CategoryPost from "./pages/categoryPost/CategoryPost";
 import Gestionale from "./pages/gestionale/Gestionale";
 import ScrollToTop from "./hooks/useScrollRestoration";
+import NotFound from "./pages/notFound/NotFound";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/gestionale" element={<Gestionale />} />
         </Route>
 
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
     </Router>
